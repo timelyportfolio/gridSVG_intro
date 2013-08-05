@@ -182,15 +182,22 @@ hljs.initHighlightingOnLoad();
 
 <h3>Before <a href="https://github.com/mbostock/d3/releases?after=v1.20.2">d3 (2011)</a> and Even <a href="http://mbostock.github.io/protovis/">Protovis (2009)</a></h3>
 
-<p>Long before the 2011 release of <a href="http://d3js.org">d3.js</a> and 2009 launch of <a href="http://mbostock.github.io/protovis/">Protovis</a>, the folks at <a href="http://www.carto.net/papers/">carto.net</a> were doing amazing and revolutionary interactive graphics in SVG.</p>
+<p>Long before the 2011 release of <a href="http://d3js.org">d3.js</a> and 2009 launch of <a href="http://mbostock.github.io/protovis/">Protovis</a>, the folks at <a href="http://www.carto.net/papers/">carto.net</a> were doing amazing and revolutionary interactive graphics in SVG.  Consider this 2006 <a href="http://www.carto.net/williams/yosemite/">Interactive Map of Yosemite</a> described in the <a href="http://www.carto.net/neumann/papers/2006/bohinj_slovenia_2006_williams_neumann.pdf">paper by Juliana Williams and Andreas Neumann</a>.</p>
 
 <iframe height = "400"  width = "900" src = "http://www.carto.net/williams/yosemite/"></iframe>
+
+<p>Building on this body of knowledge, some well known R contributors Deborah Nolan and Duncan Temple Lang created the R package <code>SVGAnnotation</code> described in <strong>Journal of Statistical Software</strong> <em>Vol 46 Issue 1</em> (<a href="http://www.jstatsoft.org/v46/i01">orig. ref</a> and <a href="http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/SVGAnnotationPaper.html#bib:SVGAnnotation">html version</a>.  The article demonstrates how to achieve SVG interactivity straight in 2010 still a year before <a href="http://d3js.org">d3.js</a> first release.  Embedded below are two examples of <a href="http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/quakes_tips.svg">many</a>, each created directly from R.  You should see some animation and tooltips on hover.</p>
+
+<iframe height = "400"  width = "900" src = "http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/gapM.svg"></iframe>
+
+<iframe height = "400"  width = "900" src = "http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/quakes_tips.svg"></iframe>
+
+<p>Now let&#39;s fast forward 3 years to 2013 where the concept of the HTML5/SVG/javascript combination for interactive graphics is <a href="https://github.com/popular/starred">ultra popular</a> and <a href="http://biovisualize.github.io/d3visualization/">well established</a> through <a href="http://d3js.org">d3.js</a>.  The novel element of d3 is its ability to bind data to elements to create dynamic documents.</p>
 
 <pre><code class="r">#get the latest version of gridSVG
 #install.packages(&quot;gridSVG&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)
 
 require(ggplot2)
-
 
 set.seed(955)
 # Make some noisily increasing data
@@ -204,8 +211,7 @@ dat &lt;- data.frame(cond = rep(c(&quot;A&quot;, &quot;B&quot;), each=10),
 #    B 17.793359218 19.718587761
 #    B 19.319909163 19.647899863
 
-
-g4&lt;- ggplot(dat, aes(x=xvar, y=yvar)) +
+g4 &lt;- ggplot(dat, aes(x=xvar, y=yvar, colour = cond)) +
   geom_point(shape=1) +    # Use hollow circles
   geom_smooth()
 </code></pre>
