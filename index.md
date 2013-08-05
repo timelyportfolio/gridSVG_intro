@@ -88,7 +88,7 @@ cat(saveXML(g4.svg$svg))
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="720px" height="288px" viewBox="0 0 720 288" version="1.1">
   <metadata xmlns:gridsvg="http://www.stat.auckland.ac.nz/~paul/R/gridSVG/">
-    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-05 16:59:09"/>
+    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-05 17:13:15"/>
     <gridsvg:argument name="name" value="plot1.svg"/>
     <gridsvg:argument name="exportCoords" value="none"/>
     <gridsvg:argument name="exportMappings" value="none"/>
@@ -433,8 +433,8 @@ List of 9
   ..$ xvar: num [1:20] -4.25 1.7 4.32 1.78 11.54 ...
   ..$ yvar: num [1:20] 3.47316 0.00594 -0.09425 2.07281 1.21544 ...
  $ layers     :List of 2
-  ..$ :Classes 'proto', 'environment' <environment: 0x0000000009525e18> 
-  ..$ :Classes 'proto', 'environment' <environment: 0x00000000095f6490> 
+  ..$ :Classes 'proto', 'environment' <environment: 0x0000000009526f20> 
+  ..$ :Classes 'proto', 'environment' <environment: 0x00000000095f7598> 
  $ scales     :Reference class 'Scales' [package "ggplot2"] with 1 fields
   ..$ scales: list()
   ..and 21 methods, of which 9 are possibly relevant:
@@ -516,8 +516,8 @@ cat(
 scatterPoints  
     .on("mouseover", function(d) {      
       //Create the tooltip label
-      d3.select("svg").append("rect")
-        .classed("tooltip")
+      d3.select(this.parentNode).append("rect")
+        .attr("id","tooltip")
         .attr("x",d3.select(this).attr("x"))
         .attr("y",d3.select(this).attr("y"))
         .attr("width",10)

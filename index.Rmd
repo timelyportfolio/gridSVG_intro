@@ -125,8 +125,8 @@ cat(
 scatterPoints  
     .on("mouseover", function(d) {      
       //Create the tooltip label
-      d3.select("svg").append("rect")
-        .classed("tooltip")
+      d3.select(this.parentNode).append("rect")
+        .attr("id","tooltip")
         .attr("x",d3.select(this).attr("x"))
         .attr("y",d3.select(this).attr("y"))
         .attr("width",10)
