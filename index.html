@@ -178,13 +178,15 @@ hljs.initHighlightingOnLoad();
 </head>
 
 <body>
+<script src = 'http://d3js.org/d3.v3.js' meta-charset='utf-8'></script>
+
 <h1>R Interactive Graphics with SVG</h1>
 
 <p>It seems computer history is <a href="http://worrydream.com/#!/TheFutureOfProgramming">full of examples</a> of forgotten concepts from programmers ahead of their time.</p>
 
 <h3>Before <a href="https://github.com/mbostock/d3/releases?after=v1.20.2">d3 (2011)</a> and Even <a href="http://mbostock.github.io/protovis/">Protovis (2009)</a></h3>
 
-<p>Long before the 2011 release of <a href="http://d3js.org">d3.js</a> and 2009 launch of <a href="http://mbostock.github.io/protovis/">Protovis</a>, the folks at <a href="http://www.carto.net/papers/">carto.net</a> were doing amazing and revolutionary interactive graphics in SVG.  Consider this 2006 <a href="http://www.carto.net/williams/yosemite/">Interactive Map of Yosemite</a> described in the <a href="http://www.carto.net/neumann/papers/2006/bohinj_slovenia_2006_williams_neumann.pdf">paper by Juliana Williams and Andreas Neumann</a>.</p>
+<p>Long before the 2011 release of <a href="http://d3js.org">d3.js</a> and 2009 launch of <a href="http://mbostock.github.io/protovis/">Protovis</a> and even before Hans Rosling&#39;s famous <a href="http://www.gapminder.org/">example</a>, the folks at <a href="http://www.carto.net/papers/">carto.net</a> were doing amazing and revolutionary interactive graphics in SVG.  Consider this 2006 <a href="http://www.carto.net/williams/yosemite/">Interactive Map of Yosemite</a> described in the <a href="http://www.carto.net/neumann/papers/2006/bohinj_slovenia_2006_williams_neumann.pdf">paper by Juliana Williams and Andreas Neumann</a>.</p>
 
 <iframe height = "400"  width = "900" src = "http://www.carto.net/williams/yosemite/"></iframe>
 
@@ -217,7 +219,7 @@ hljs.initHighlightingOnLoad();
 
 <p><iframe src="http://rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS1=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=timelyp-20&o=1&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1449316956" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>.</p>
 
-<p>Here is the slightly modified code that will produce our starting chart.  Now would also be a good time to get the newest gridSVG with <code>install.packages(&quot;gridSVG&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)</code>.</p>
+<p>Here is the slightly modified code that will produce our starting chart.  I will keep the smoothing even though we will not use it to show how we can preserve some R features not implemented as well in javascript.  Now would be a good time to get the newest gridSVG with <code>install.packages(&quot;gridSVG&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)</code>.</p>
 
 <pre><code class="r">#get the latest version of gridSVG
 #install.packages(&quot;gridSVG&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)
@@ -245,28 +247,28 @@ g4
 
 <p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-2"/> </p>
 
-<p>There are lots of ways that we might add a tooltip if that is all we want.  However, I think we will want more than just tooltips, so a full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic,</p>
+<p>There are lots of ways that we might add a tooltip if that is all we want.  However, I think we will want more than just tooltips, so a full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly SVG copy of our ggplot2 graphic above.  If you don&#39;t believe it is SVG, left-click on the graphic and Inspect Element.  I told you it was SVG.  If you still don&#39;t believe me, zoom in to 400% and see if you can tell a difference between SVG and png.</p>
 
 <pre><code class="r">require(gridSVG)
 #print our ggplot2 graphic again
 g4
 #export to SVG file and R object
 #grid.export deprecates the older gridToSVG
-g4.svg &lt;- grid.export(&quot;plot1.svg&quot;)
+g4.svg &lt;- grid.export(&quot;plot1.svg&quot;,addClasses=TRUE)
 #print our newly exported SVG inline
 cat(saveXML(g4.svg$svg))
 </code></pre>
 
 <p><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="720px" height="288px" viewBox="0 0 720 288" version="1.1">
   <metadata xmlns:gridsvg="http://www.stat.auckland.ac.nz/~paul/R/gridSVG/">
-    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-05 14:31:28"/>
+    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-05 16:59:09"/>
     <gridsvg:argument name="name" value="plot1.svg"/>
     <gridsvg:argument name="exportCoords" value="none"/>
     <gridsvg:argument name="exportMappings" value="none"/>
     <gridsvg:argument name="exportJS" value="none"/>
     <gridsvg:argument name="res" value="72"/>
     <gridsvg:argument name="prefix" value=""/>
-    <gridsvg:argument name="addClasses" value="FALSE"/>
+    <gridsvg:argument name="addClasses" value="TRUE"/>
     <gridsvg:argument name="indent" value="TRUE"/>
     <gridsvg:argument name="htmlWrapper" value="FALSE"/>
     <gridsvg:argument name="usePaths" value="vpPaths"/>
@@ -282,50 +284,50 @@ cat(saveXML(g4.svg$svg))
           <circle cx="0" cy="0" r="3.75"/>
         </symbol>
       </defs>
-      <g id="layout.1">
-        <g id="GRID.gTableParent.120.1">
+      <g id="layout.1" class="pushedvp viewport">
+        <g id="GRID.gTableParent.120.1" class="gTableParent gTree grob gDesc">
           <defs>
             <clipPath id="layout::background.1-6-6-1.1.clipPath">
               <rect x="0" y="0" width="720" height="288" fill="none" stroke="none"/>
             </clipPath>
           </defs>
-          <g id="layout::background.1-6-6-1.1" clip-path="url(#layout::background.1-6-6-1.1.clipPath)">
-            <g id="background.1-6-6-1.1">
+          <g id="layout::background.1-6-6-1.1" clip-path="url(#layout::background.1-6-6-1.1.clipPath)" class="pushedvp viewport">
+            <g id="background.1-6-6-1.1" class="gTableChild rect grob gDesc">
               <rect id="background.1-6-6-1.1.1" x="0" y="0" width="720" height="288" stroke-width="1.06" stroke="rgb(255,255,255)" fill="rgb(255,255,255)" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1"/>
             </g>
           </g>
-          <g id="layout::spacer.4-3-4-3.1"/>
+          <g id="layout::spacer.4-3-4-3.1" class="pushedvp viewport"/>
           <defs>
             <clipPath id="layout::panel.3-4-3-4.1.clipPath">
               <rect x="41.22" y="37.28" width="609.69" height="236.32" fill="none" stroke="none"/>
             </clipPath>
           </defs>
-          <g id="layout::panel.3-4-3-4.1" clip-path="url(#layout::panel.3-4-3-4.1.clipPath)">
-            <g id="panel.3-4-3-4.1">
-              <g id="grill.gTree.84.1">
-                <g id="panel.background.rect.75.1">
+          <g id="layout::panel.3-4-3-4.1" clip-path="url(#layout::panel.3-4-3-4.1.clipPath)" class="pushedvp viewport">
+            <g id="panel.3-4-3-4.1" class="gTableChild gTree grob gDesc">
+              <g id="grill.gTree.84.1" class="gTree grob gDesc">
+                <g id="panel.background.rect.75.1" class="rect grob gDesc">
                   <rect id="panel.background.rect.75.1.1" x="41.22" y="37.28" width="609.69" height="236.32" stroke-width="1.06" stroke="none" fill="rgb(229,229,229)" stroke-dasharray="none" stroke-opacity="0" fill-opacity="1"/>
                 </g>
-                <g id="panel.grid.minor.y.polyline.77.1">
+                <g id="panel.grid.minor.y.polyline.77.1" class="polyline grob gDesc">
                   <polyline id="panel.grid.minor.y.polyline.77.1.1" points="41.22,62.03 650.92,62.03" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.minor.y.polyline.77.1.2" points="41.22,118.9 650.92,118.9" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.minor.y.polyline.77.1.3" points="41.22,175.76 650.92,175.76" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.minor.y.polyline.77.1.4" points="41.22,232.63 650.92,232.63" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
-                <g id="panel.grid.minor.x.polyline.79.1">
+                <g id="panel.grid.minor.x.polyline.79.1" class="polyline grob gDesc">
                   <polyline id="panel.grid.minor.x.polyline.79.1.1" points="110.14,37.28 110.14,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.minor.x.polyline.79.1.2" points="227.71,37.28 227.71,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.minor.x.polyline.79.1.3" points="345.28,37.28 345.28,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.minor.x.polyline.79.1.4" points="462.84,37.28 462.84,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.minor.x.polyline.79.1.5" points="580.41,37.28 580.41,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
-                <g id="panel.grid.major.y.polyline.81.1">
+                <g id="panel.grid.major.y.polyline.81.1" class="polyline grob gDesc">
                   <polyline id="panel.grid.major.y.polyline.81.1.1" points="41.22,90.46 650.92,90.46" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.major.y.polyline.81.1.2" points="41.22,147.33 650.92,147.33" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.major.y.polyline.81.1.3" points="41.22,204.2 650.92,204.2" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.major.y.polyline.81.1.4" points="41.22,261.07 650.92,261.07" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
-                <g id="panel.grid.major.x.polyline.83.1">
+                <g id="panel.grid.major.x.polyline.83.1" class="polyline grob gDesc">
                   <polyline id="panel.grid.major.x.polyline.83.1.1" points="51.36,37.28 51.36,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.major.x.polyline.83.1.2" points="168.92,37.28 168.92,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                   <polyline id="panel.grid.major.x.polyline.83.1.3" points="286.49,37.28 286.49,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
@@ -334,7 +336,7 @@ cat(saveXML(g4.svg$svg))
                   <polyline id="panel.grid.major.x.polyline.83.1.6" points="639.19,37.28 639.19,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
               </g>
-              <g id="geom_point.points.66.1">
+              <g id="geom_point.points.66.1" class="points grob gDesc">
                 <use id="geom_point.points.66.1.1" xlink:href="#gridSVG.pch19" x="68.94" y="110.21" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
                 <use id="geom_point.points.66.1.2" xlink:href="#gridSVG.pch19" x="208.95" y="90.5" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
                 <use id="geom_point.points.66.1.3" xlink:href="#gridSVG.pch19" x="270.57" y="89.93" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
@@ -356,23 +358,23 @@ cat(saveXML(g4.svg$svg))
                 <use id="geom_point.points.66.1.19" xlink:href="#gridSVG.pch19" x="587.31" y="202.6" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
                 <use id="geom_point.points.66.1.20" xlink:href="#gridSVG.pch19" x="623.2" y="202.2" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
               </g>
-              <g id="smooths.gTree.71.1">
-                <g id="geom_ribbon.polygon.68.1">
+              <g id="smooths.gTree.71.1" class="gTree grob gDesc">
+                <g id="geom_ribbon.polygon.68.1" class="polygon grob gDesc">
                   <polygon id="geom_ribbon.polygon.68.1.1" points="68.94,177.15 75.95,172.15 82.97,167.52 89.98,163.26 97,159.37 104.02,155.86 111.03,152.73 118.05,149.98 125.06,147.61 132.08,145.62 139.1,143.99 146.11,142.72 153.13,141.78 160.14,141.15 167.16,140.79 174.18,140.69 181.19,140.8 188.21,141.09 195.22,141.53 202.24,142.09 209.26,142.75 216.27,143.47 223.29,144.26 230.3,145.21 237.32,146.38 244.34,147.82 251.35,149.52 258.37,151.41 265.39,153.38 272.4,155.26 279.42,156.88 286.43,158.22 293.45,159.33 300.47,160.26 307.48,161.09 314.5,161.88 321.51,162.7 328.53,163.6 335.55,164.62 342.56,165.76 349.58,166.99 356.59,168.24 363.61,169.45 370.63,170.52 377.64,171.35 384.66,171.47 391.67,171.32 398.69,171.55 405.71,172.21 412.72,172.59 419.74,172.95 426.75,173.71 433.77,174.97 440.79,176.54 447.8,178.25 454.82,180.3 461.83,182.92 468.85,186.07 475.87,189.47 482.88,192.65 489.9,195.18 496.91,197.44 503.93,199.63 510.95,201.76 517.96,203.84 524.98,205.89 531.99,207.93 539.01,209.98 546.03,212.05 553.04,214.19 560.06,216.45 567.08,218.93 574.09,221.75 581.11,225.15 588.12,229.32 595.14,234.35 602.16,240.26 609.17,247.02 616.19,254.57 623.2,262.86 623.2,154.69 616.19,158.39 609.17,161.38 602.16,163.57 595.14,164.91 588.12,165.37 581.11,164.96 574.09,163.75 567.08,161.85 560.06,159.44 553.04,156.68 546.03,153.71 539.01,150.62 531.99,147.49 524.98,144.39 517.96,141.38 510.95,138.52 503.93,135.86 496.91,133.45 489.9,131.37 482.88,129.76 475.87,128.81 468.85,128.13 461.83,127.36 454.82,126.29 447.8,125 440.79,123.77 433.77,123 426.75,122.5 419.74,121.84 412.72,120.86 405.71,119.68 398.69,118.8 391.67,118.45 384.66,117.89 377.64,116.79 370.63,115.4 363.61,114.06 356.59,112.69 349.58,111.22 342.56,109.6 335.55,107.79 328.53,105.8 321.51,103.64 314.5,101.37 307.48,99.07 300.47,96.82 293.45,94.72 286.43,92.87 279.42,91.34 272.4,90.2 265.39,89.4 258.37,88.64 251.35,87.8 244.34,86.83 237.32,85.72 230.3,84.52 223.29,83.33 216.27,82.28 209.26,81.49 202.24,80.91 195.22,80.36 188.21,79.8 181.19,79.21 174.18,78.57 167.16,77.85 160.14,77.01 153.13,76.02 146.11,74.86 139.1,73.51 132.08,71.96 125.06,70.18 118.05,68.17 111.03,65.94 104.02,63.49 97,60.81 89.98,57.92 82.97,54.82 75.95,51.52 68.94,48.02" fill="rgb(153,153,153)" stroke="none" stroke-width="1.06" stroke-dasharray="none" stroke-opacity="0" fill-opacity="0.4"/>
                 </g>
-                <g id="GRID.polyline.69.1">
+                <g id="GRID.polyline.69.1" class="polyline grob gDesc">
                   <polyline id="GRID.polyline.69.1.1" points="68.94,112.59 75.95,111.84 82.97,111.17 89.98,110.59 97,110.09 104.02,109.68 111.03,109.34 118.05,109.08 125.06,108.9 132.08,108.79 139.1,108.75 146.11,108.79 153.13,108.9 160.14,109.08 167.16,109.32 174.18,109.63 181.19,110.01 188.21,110.44 195.22,110.94 202.24,111.5 209.26,112.12 216.27,112.87 223.29,113.8 230.3,114.87 237.32,116.05 244.34,117.33 251.35,118.66 258.37,120.02 265.39,121.39 272.4,122.73 279.42,124.11 286.43,125.55 293.45,127.03 300.47,128.54 307.48,130.08 314.5,131.62 321.51,133.17 328.53,134.7 335.55,136.21 342.56,137.68 349.58,139.1 356.59,140.46 363.61,141.75 370.63,142.96 377.64,144.07 384.66,144.68 391.67,144.89 398.69,145.17 405.71,145.94 412.72,146.72 419.74,147.4 426.75,148.11 433.77,148.98 440.79,150.15 447.8,151.62 454.82,153.3 461.83,155.14 468.85,157.1 475.87,159.14 482.88,161.21 489.9,163.28 496.91,165.45 503.93,167.74 510.95,170.14 517.96,172.61 524.98,175.14 531.99,177.71 539.01,180.3 546.03,182.88 553.04,185.44 560.06,187.95 567.08,190.39 574.09,192.75 581.11,195.05 588.12,197.35 595.14,199.63 602.16,201.91 609.17,204.2 616.19,206.48 623.2,208.77" stroke="rgb(51,102,255)" fill="none" stroke-width="1.06" stroke-dasharray="none" stroke-linecap="butt" stroke-linejoin="round" stroke-miterlimit="1" stroke-opacity="1" fill-opacity="1"/>
                 </g>
               </g>
             </g>
           </g>
-          <g id="layout::axis-l.3-3-3-3.1">
-            <g id="layout::axis-l.3-3-3-3::GRID.VP.6.1">
-              <g id="axis-l.3-3-3-3.1">
-                <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis.1">
-                  <g id="GRID.gTableParent.125.1">
-                    <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis::axis.1-1-1-1.1">
-                      <g id="axis.1-1-1-1.1">
+          <g id="layout::axis-l.3-3-3-3.1" class="pushedvp viewport">
+            <g id="layout::axis-l.3-3-3-3::GRID.VP.6.1" class="pushedvp viewport">
+              <g id="axis-l.3-3-3-3.1" class="gTableChild absoluteGrob gTree grob gDesc">
+                <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis.1" class="pushedvp viewport">
+                  <g id="GRID.gTableParent.125.1" class="gTableParent gTree grob gDesc">
+                    <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis::axis.1-1-1-1.1" class="pushedvp viewport">
+                      <g id="axis.1-1-1-1.1" class="gTableChild text grob gDesc">
                         <g id="axis.1-1-1-1.1.1" transform="translate(34.14, 90.46)" stroke-width="0.1">
                           <g id="axis.1-1-1-1.1.1.scale" transform="scale(1, -1)">
                             <text x="0" y="0" id="axis.1-1-1-1.1.1.text" text-anchor="end" font-size="9.6" stroke="rgb(127,127,127)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(127,127,127)" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
@@ -403,8 +405,8 @@ cat(saveXML(g4.svg$svg))
                         </g>
                       </g>
                     </g>
-                    <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis::axis.1-2-1-2.1">
-                      <g id="axis.1-2-1-2.1">
+                    <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis::axis.1-2-1-2.1" class="pushedvp viewport">
+                      <g id="axis.1-2-1-2.1" class="gTableChild polyline grob gDesc">
                         <polyline id="axis.1-2-1-2.1.1" points="36.97,90.46 41.22,90.46" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                         <polyline id="axis.1-2-1-2.1.2" points="36.97,147.33 41.22,147.33" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                         <polyline id="axis.1-2-1-2.1.3" points="36.97,204.2 41.22,204.2" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
@@ -416,13 +418,13 @@ cat(saveXML(g4.svg$svg))
               </g>
             </g>
           </g>
-          <g id="layout::axis-b.4-4-4-4.1">
-            <g id="layout::axis-b.4-4-4-4::GRID.VP.5.1">
-              <g id="axis-b.4-4-4-4.1">
-                <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis.1">
-                  <g id="GRID.gTableParent.131.1">
-                    <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis::axis.1-1-1-1.1">
-                      <g id="axis.1-1-1-1.2">
+          <g id="layout::axis-b.4-4-4-4.1" class="pushedvp viewport">
+            <g id="layout::axis-b.4-4-4-4::GRID.VP.5.1" class="pushedvp viewport">
+              <g id="axis-b.4-4-4-4.1" class="gTableChild absoluteGrob gTree grob gDesc">
+                <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis.1" class="pushedvp viewport">
+                  <g id="GRID.gTableParent.131.1" class="gTableParent gTree grob gDesc">
+                    <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis::axis.1-1-1-1.1" class="pushedvp viewport">
+                      <g id="axis.1-1-1-1.2" class="gTableChild polyline grob gDesc">
                         <polyline id="axis.1-1-1-1.2.1" points="51.36,33.03 51.36,37.28" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                         <polyline id="axis.1-1-1-1.2.2" points="168.92,33.03 168.92,37.28" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                         <polyline id="axis.1-1-1-1.2.3" points="286.49,33.03 286.49,37.28" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
@@ -431,8 +433,8 @@ cat(saveXML(g4.svg$svg))
                         <polyline id="axis.1-1-1-1.2.6" points="639.19,33.03 639.19,37.28" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                       </g>
                     </g>
-                    <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis::axis.2-1-2-1.1">
-                      <g id="axis.2-1-2-1.1">
+                    <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis::axis.2-1-2-1.1" class="pushedvp viewport">
+                      <g id="axis.2-1-2-1.1" class="gTableChild text grob gDesc">
                         <g id="axis.2-1-2-1.1.1" transform="translate(51.36, 30.2)" stroke-width="0.1">
                           <g id="axis.2-1-2-1.1.1.scale" transform="scale(1, -1)">
                             <text x="0" y="0" id="axis.2-1-2-1.1.1.text" text-anchor="middle" font-size="9.6" stroke="rgb(127,127,127)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(127,127,127)" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
@@ -482,8 +484,8 @@ cat(saveXML(g4.svg$svg))
               </g>
             </g>
           </g>
-          <g id="layout::xlab.5-4-5-4.1">
-            <g id="xlab.5-4-5-4.1">
+          <g id="layout::xlab.5-4-5-4.1" class="pushedvp viewport">
+            <g id="xlab.5-4-5-4.1" class="gTableChild text grob gDesc">
               <g id="xlab.5-4-5-4.1.1" transform="translate(346.07, 15.11)" stroke-width="0.1">
                 <g id="xlab.5-4-5-4.1.1.scale" transform="scale(1, -1)">
                   <text x="0" y="0" id="xlab.5-4-5-4.1.1.text" text-anchor="middle" font-size="12" stroke="rgb(0,0,0)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
@@ -493,8 +495,8 @@ cat(saveXML(g4.svg$svg))
               </g>
             </g>
           </g>
-          <g id="layout::ylab.3-2-3-2.1">
-            <g id="ylab.3-2-3-2.1">
+          <g id="layout::ylab.3-2-3-2.1" class="pushedvp viewport">
+            <g id="ylab.3-2-3-2.1" class="gTableChild text grob gDesc">
               <g id="ylab.3-2-3-2.1.1" transform="translate(15.11, 155.44)" stroke-width="0.1">
                 <g id="ylab.3-2-3-2.1.1.scale" transform="scale(1, -1)">
                   <text x="0" y="0" id="ylab.3-2-3-2.1.1.text" transform="rotate(-90)" text-anchor="middle" font-size="12" stroke="rgb(0,0,0)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
@@ -504,21 +506,21 @@ cat(saveXML(g4.svg$svg))
               </g>
             </g>
           </g>
-          <g id="layout::guide-box.3-5-3-5.1">
-            <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5.1">
-              <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5.1">
-                <g id="GRID.gTableChild.143.1">
-                  <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2.1">
-                    <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2.1">
-                      <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2.1">
-                        <g id="GRID.gTableChild.144.1">
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::background.1-6-6-1.1">
-                            <g id="background.1-6-6-1.2">
+          <g id="layout::guide-box.3-5-3-5.1" class="pushedvp viewport">
+            <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5.1" class="pushedvp viewport">
+              <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5.1" class="pushedvp viewport">
+                <g id="GRID.gTableChild.143.1" class="gTableChild gTableParent gTree grob gDesc">
+                  <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2.1" class="pushedvp viewport">
+                    <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2.1" class="pushedvp viewport">
+                      <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2.1" class="pushedvp viewport">
+                        <g id="GRID.gTableChild.144.1" class="gTableChild gTableParent gTree grob gDesc">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::background.1-6-6-1.1" class="pushedvp viewport">
+                            <g id="background.1-6-6-1.2" class="gTableChild rect grob gDesc">
                               <rect id="background.1-6-6-1.2.1" x="660.95" y="128.16" width="34.61" height="54.56" stroke-width="1.06" stroke="none" fill="rgb(255,255,255)" stroke-dasharray="none" stroke-opacity="0" fill-opacity="1"/>
                             </g>
                           </g>
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::title.2-5-2-2.1">
-                            <g id="title.2-5-2-2.1">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::title.2-5-2-2.1" class="pushedvp viewport">
+                            <g id="title.2-5-2-2.1" class="gTableChild text grob gDesc">
                               <g id="title.2-5-2-2.1.1" transform="translate(665.2, 174.88)" stroke-width="0.1">
                                 <g id="title.2-5-2-2.1.1.scale" transform="scale(1, -1)">
                                   <text x="0" y="0" id="title.2-5-2-2.1.1.text" text-anchor="start" font-size="9.6" stroke="rgb(0,0,0)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-weight="bold" font-style="normal">
@@ -528,28 +530,28 @@ cat(saveXML(g4.svg$svg))
                               </g>
                             </g>
                           </g>
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-3-1-bg.4-2-4-2.1">
-                            <g id="key-3-1-bg.4-2-4-2.1">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-3-1-bg.4-2-4-2.1" class="pushedvp viewport">
+                            <g id="key-3-1-bg.4-2-4-2.1" class="gTableChild rect grob gDesc">
                               <rect id="key-3-1-bg.4-2-4-2.1.1" x="665.2" y="149.69" width="17.28" height="17.28" stroke-width="1.06" stroke="rgb(255,255,255)" fill="rgb(242,242,242)" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1"/>
                             </g>
                           </g>
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-3-1-1.4-2-4-2.1">
-                            <g id="key-3-1-1.4-2-4-2.1">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-3-1-1.4-2-4-2.1" class="pushedvp viewport">
+                            <g id="key-3-1-1.4-2-4-2.1" class="gTableChild points grob gDesc">
                               <use id="key-3-1-1.4-2-4-2.1.1" xlink:href="#gridSVG.pch19" x="673.84" y="158.33" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
                             </g>
                           </g>
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-4-1-bg.5-2-5-2.1">
-                            <g id="key-4-1-bg.5-2-5-2.1">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-4-1-bg.5-2-5-2.1" class="pushedvp viewport">
+                            <g id="key-4-1-bg.5-2-5-2.1" class="gTableChild rect grob gDesc">
                               <rect id="key-4-1-bg.5-2-5-2.1.1" x="665.2" y="132.41" width="17.28" height="17.28" stroke-width="1.06" stroke="rgb(255,255,255)" fill="rgb(242,242,242)" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1"/>
                             </g>
                           </g>
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-4-1-1.5-2-5-2.1">
-                            <g id="key-4-1-1.5-2-5-2.1">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::key-4-1-1.5-2-5-2.1" class="pushedvp viewport">
+                            <g id="key-4-1-1.5-2-5-2.1" class="gTableChild points grob gDesc">
                               <use id="key-4-1-1.5-2-5-2.1.1" xlink:href="#gridSVG.pch19" x="673.84" y="141.05" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
                             </g>
                           </g>
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::label-3-3.4-4-4-4.1">
-                            <g id="label-3-3.4-4-4-4.1">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::label-3-3.4-4-4-4.1" class="pushedvp viewport">
+                            <g id="label-3-3.4-4-4-4.1" class="gTableChild text grob gDesc">
                               <g id="label-3-3.4-4-4-4.1.1" transform="translate(684.64, 158.33)" stroke-width="0.1">
                                 <g id="label-3-3.4-4-4-4.1.1.scale" transform="scale(1, -1)">
                                   <text x="0" y="0" id="label-3-3.4-4-4-4.1.1.text" text-anchor="start" font-size="9.6" stroke="rgb(0,0,0)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
@@ -559,8 +561,8 @@ cat(saveXML(g4.svg$svg))
                               </g>
                             </g>
                           </g>
-                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::label-4-3.5-4-5-4.1">
-                            <g id="label-4-3.5-4-5-4.1">
+                          <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::label-4-3.5-4-5-4.1" class="pushedvp viewport">
+                            <g id="label-4-3.5-4-5-4.1" class="gTableChild text grob gDesc">
                               <g id="label-4-3.5-4-5-4.1.1" transform="translate(684.64, 141.05)" stroke-width="0.1">
                                 <g id="label-4-3.5-4-5-4.1.1.scale" transform="scale(1, -1)">
                                   <text x="0" y="0" id="label-4-3.5-4-5-4.1.1.text" text-anchor="start" font-size="9.6" stroke="rgb(0,0,0)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
@@ -578,8 +580,8 @@ cat(saveXML(g4.svg$svg))
               </g>
             </g>
           </g>
-          <g id="layout::title.2-4-2-4.1">
-            <g id="title.2-4-2-4.1">
+          <g id="layout::title.2-4-2-4.1" class="pushedvp viewport">
+            <g id="title.2-4-2-4.1" class="gTableChild text grob gDesc">
               <g id="title.2-4-2-4.1.1" transform="translate(346.07, 273.6)" stroke-width="0.1">
                 <g id="title.2-4-2-4.1.1.scale" transform="scale(1, -1)">
                   <text x="0" y="0" id="title.2-4-2-4.1.1.text" text-anchor="middle" font-size="14.4" stroke="rgb(0,0,0)" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
@@ -594,6 +596,106 @@ cat(saveXML(g4.svg$svg))
     </g>
   </g>
 </svg></p>
+
+<p>Of course the objective is to get more than just a more scalable graphic.  Let&#39;s bind some data to get some simple tooltips.  ggplot2 stores the data for our graph within our <code>g4</code> object.  We can see it.</p>
+
+<p>List of 9
+ $ data       :&#39;data.frame&#39;:    20 obs. of  3 variables:
+  ..$ cond: Factor w/ 2 levels &ldquo;A&rdquo;,&ldquo;B&rdquo;: 1 1 1 1 1 1 1 1 1 1 &hellip;
+  ..$ xvar: num [1:20] -4.25 1.7 4.32 1.78 11.54 &hellip;
+  ..$ yvar: num [1:20] 3.47316 0.00594 -0.09425 2.07281 1.21544 &hellip;
+ $ layers     :List of 2
+  ..$ :Classes &#39;proto&#39;, &#39;environment&#39; <environment: 0x0000000009525e18> 
+  ..$ :Classes &#39;proto&#39;, &#39;environment&#39; <environment: 0x00000000095f6490> 
+ $ scales     :Reference class &#39;Scales&#39; [package &ldquo;ggplot2&rdquo;] with 1 fields
+  ..$ scales: list()
+  ..and 21 methods, of which 9 are possibly relevant:
+  ..  add, clone, find, get_scales, has_scale, initialize, input, n,
+  ..  non_position_scales
+ $ mapping    :List of 2
+  ..$ x: symbol xvar
+  ..$ y: symbol yvar
+ $ theme      : list()
+ $ coordinates:List of 1
+  ..$ limits:List of 2
+  .. ..$ x: NULL
+  .. ..$ y: NULL
+  ..- attr(<em>, &ldquo;class&rdquo;)= chr [1:2] &ldquo;cartesian&rdquo; &ldquo;coord&rdquo;
+ $ facet      :List of 1
+  ..$ shrink: logi TRUE
+  ..- attr(</em>, &ldquo;class&rdquo;)= chr [1:2] &ldquo;null&rdquo; &ldquo;facet&rdquo;
+ $ plot_env   :<environment: R_GlobalEnv> 
+ $ labels     :List of 3
+  ..$ x     : chr &ldquo;xvar&rdquo;
+  ..$ y     : chr &ldquo;yvar&rdquo;
+  ..$ colour: chr &ldquo;cond&rdquo;</p>
+
+<ul>
+<li>attr(*, &ldquo;class&rdquo;)= chr [1:2] &ldquo;gg&rdquo; &ldquo;ggplot&rdquo;
+cond   xvar     yvar
+1    A -4.252  3.47316
+2    A  1.702  0.00594
+3    A  4.323 -0.09425
+4    A  1.781  2.07281
+5    A 11.537  1.21544
+6    A  6.672  3.60811</li>
+</ul>
+
+<p>We will need to some way to give this data to Javascript.  Javascript likes JSON, so let&#39;s use the package <a href="http://cran.r-project.org/web/packages/rjson/index.html"><code>rjson</code></a> to send our data.  I will assume that we are more comfortable flattening our data in R.</p>
+
+<pre><code class="r">cat(
+  &#39;&lt;script&gt; ourdata=&#39;,
+  rjson::toJSON(apply(g4$data,MARGIN=1,FUN=function(x)return(list(x)))),
+  &#39;&lt;/script&gt;&#39;
+)
+</code></pre>
+
+<script> ourdata= [[{"cond":"A","xvar":"-4.252354","yvar":" 3.47316"}],[{"cond":"A","xvar":" 1.702318","yvar":" 0.00594"}],[{"cond":"A","xvar":" 4.323054","yvar":"-0.09425"}],[{"cond":"A","xvar":" 1.780628","yvar":" 2.07281"}],[{"cond":"A","xvar":"11.537348","yvar":" 1.21544"}],[{"cond":"A","xvar":" 6.672130","yvar":" 3.60811"}],[{"cond":"A","xvar":" 0.004295","yvar":" 7.52921"}],[{"cond":"A","xvar":" 9.971403","yvar":" 6.15615"}],[{"cond":"A","xvar":" 9.007456","yvar":" 8.93524"}],[{"cond":"A","xvar":"11.766998","yvar":" 8.92809"}],[{"cond":"B","xvar":" 8.840216","yvar":"13.20241"}],[{"cond":"B","xvar":" 5.974094","yvar":"17.64489"}],[{"cond":"B","xvar":"15.034829","yvar":"10.48540"}],[{"cond":"B","xvar":"10.985010","yvar":"10.13804"}],[{"cond":"B","xvar":"13.543222","yvar":"18.68188"}],[{"cond":"B","xvar":"11.435789","yvar":"19.14347"}],[{"cond":"B","xvar":"16.977063","yvar":"18.83250"}],[{"cond":"B","xvar":"17.220013","yvar":"18.93982"}],[{"cond":"B","xvar":"17.793359","yvar":"19.71859"}],[{"cond":"B","xvar":"19.319909","yvar":"19.64790"}]] </script>
+
+<p>After this <code>ourdata</code> in Javascript should contain an array of 20 arrays, each representing the data for a point on our graph.  To show off some d3, we will get our data in perfect bindable form with this.</p>
+
+<pre><code class="r">cat(
+  &#39;&lt;script&gt; dataToBind = &#39;,
+  &#39;d3.entries(ourdata.map(function(d,i) {return d[0]}))&#39;,
+  &#39;&lt;/script&gt;&#39;
+)
+</code></pre>
+
+<script> dataToBind =  d3.entries(ourdata.map(function(d,i) {return d[0]})) </script>
+
+<p>Finally, we are ready for the data bind.  We used <code>gridSVG(...,addClasses=TRUE)</code> to ease our <code>d3.select</code>.  In future examples, we will see other ways we might accomplish this.</p>
+
+<pre><code class="r">cat(
+  &#39;&lt;script&gt;\n&#39;,
+  &#39;scatterPoints = d3.select(&quot;.points&quot;).selectAll(&quot;use&quot;);\n&#39;,
+  &#39;scatterPoints.data(dataToBind)&#39;,
+  &#39;&lt;/script&gt;\n&#39;
+)
+</code></pre>
+
+<script>
+ scatterPoints = d3.select(".points").selectAll("use");
+ scatterPoints.data(dataToBind) </script>
+
+
+<script>
+scatterPoints  
+    .on("mouseover", function(d) {      
+      //Create the tooltip label
+      d3.select("svg").append("rect")
+        .classed("tooltip")
+        .attr("x",d3.select(this).attr("x"))
+        .attr("y",d3.select(this).attr("y"))
+        .attr("width",10)
+        .attr("height",10)
+        .attr("fill","blue");
+        //.attr("text-anchor", "middle")
+        //.text(d);
+    })              
+    .on("mouseout", function(d) {       
+        d3.select("#tooltip").remove();  
+    });
+</script>
 
 </body>
 
