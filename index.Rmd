@@ -1,3 +1,5 @@
+# R Interactive Graphics with SVG
+
 It seems computer history is [full of examples](http://worrydream.com/#!/TheFutureOfProgramming) of forgotten concepts from programmers ahead of their time.
 
 ### Before [d3 (2011)](https://github.com/mbostock/d3/releases?after=v1.20.2) and Even [Protovis (2009)](http://mbostock.github.io/protovis/)
@@ -6,13 +8,35 @@ Long before the 2011 release of [d3.js](http://d3js.org) and 2009 launch of [Pro
 
 <iframe height = "400"  width = "900" src = "http://www.carto.net/williams/yosemite/"></iframe>
 
-Building on this body of knowledge, some well known R contributors Deborah Nolan and Duncan Temple Lang created the R package `SVGAnnotation` described in **Journal of Statistical Software** *Vol 46 Issue 1* ([orig. ref](http://www.jstatsoft.org/v46/i01) and [html version](http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/SVGAnnotationPaper.html#bib:SVGAnnotation).  The article demonstrates how to achieve SVG interactivity straight in 2010 still a year before [d3.js](http://d3js.org) first release.  Embedded below are two examples of [many](http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/quakes_tips.svg), each created directly from R.  You should see some animation and tooltips on hover.
+Building on this body of knowledge, some well known R contributors Deborah Nolan and Duncan Temple Lang (authors of the upcoming book <a href="http://www.amazon.com/gp/product/1461478995/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=1461478995&linkCode=as2&tag=timelyp-20">XML and Web Technologies for Data Sciences with R (Use R!)</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=timelyp-20&l=as2&o=1&a=1461478995" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+) created the R package `SVGAnnotation` described in **Journal of Statistical Software** *Vol 46 Issue 1* ([submitted paper](http://www.jstatsoft.org/v46/i01) and [html version](http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/SVGAnnotationPaper.html#bib:SVGAnnotation)).  The article demonstrates how to achieve SVG interactivity straight from R still a year before [d3.js](http://d3js.org) first release.  Embedded below are two examples of [many](http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/quakes_tips.svg), each created directly from R.  You should see some animation and tooltips on hover.
 
 <iframe height = "400"  width = "900" src = "http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/gapM.svg"></iframe>
 
 <iframe height = "400"  width = "900" src = "http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/quakes_tips.svg"></iframe>
 
 Now let's fast forward 3 years to 2013 where the concept of the HTML5/SVG/javascript combination for interactive graphics is [ultra popular](https://github.com/popular/starred) and [well established](http://biovisualize.github.io/d3visualization/) through [d3.js](http://d3js.org).  The novel element of d3 is its ability to bind data to elements of a document to create the 3 d's of d3--data-driven documents.
+
+## Just a Little Bit of Glue
+For R, we just need a little bit of glue to blend the old with the new to directly harness the power of SVG interactivity and d3 data binding.  It seems there are 3 types of glue available:
+
+1.  Let R do the data and then send the data to Javascript to create the SVG graphics.  This is the process employed by [rCharts](http://rcharts.io/site), [clickme](http://rclickme.com/), [d3network](http://christophergandrud.github.io/d3Network/), [googleVis](http://cran.r-project.org/web/packages/googleVis/index.html), [gigvis](https://github.com/rstudio/gigvis), and [tabplotd3](http://cran.r-project.org/web/packages/tabplotd3/index.html).
+
+2.  Let R both do the data and render the graph then export the SVG to get interactivity from Javascript.  We see this with the new and improved [gridSVG](http://sjp.co.nz/projects/gridsvg/) and the previously mentioned [SVGAnnotation](http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/SVGAnnotationPaper.html#bib:SVGAnnotation).
+
+3.  Use 1. or 2. and then maintain bidirectional communication between R and Javascript through [shiny](http://rstudio.com/shiny), [Rook](http://cran.r-project.org/web/packages/Rook/index.html), or some other web server type interface.
+
+I believe the choice of method will depend on the user's competence in R and/or Javascript, their desire for customization, and the need for R's data calculation abilities post-render.  I have posted a lot about using method 1 with rCharts and clickme, so I wanted to start a series of demos using method 2.  Method 3 is fairly trivial with the full-featured Shiny and Rook once we have 1 and 2 conquered.
+
+## Method 2 | R Draw and Render SVG with a d3 Reverse Data Bind
+Much of the R to SVG is already shown [in this blog](http://stattech.wordpress.fos.auckland.ac.nz/) from the R Mecca in New Zealand.  As Simon Potter has extended SVGAnnotation while improving gridSVG, he has documented the process and the improvements on the same blog and in his soon-to-be-marked Masters' thesis.  Since there are still few examples of the data bind step that we know and love from d3 but in reverse, I thought I would share a quick experiment doing a reverse data bind using d3 on a R/gridSVG exported graph.  For those not familiar with d3, Mike Bostock's [Three Little Circles](http://mbostock.github.io/d3/tutorial/circle.html) will be very helpful.
+
+
+If we choose gridSVG, we lose `base` graphics (SVGAnnotation does allow `base`), but I believe its advantages overcome this loss, and we still have the super-powerful `grid` graphics libraries `lattice` and `ggplot2`.  For this example, I will build on top of a ggplot2 scatter plot example from Winston Chang's [Cookbook from R](http://www.cookbook-r.com/Graphs/Scatterplots_(ggplot2)).  This is the supporting website for his book
+
+<iframe src="http://rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS1=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=timelyp-20&o=1&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1449316956" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>.
+
+Here is the slightly modified code that will produce our starting chart.  I will keep the smoothing even though we will not use it to show how we can preserve some R features not implemented as well in javascript.  Now would be a good time to get the newest gridSVG with `install.packages("gridSVG", repos="http://R-Forge.R-project.org")`.
 
 ```{r echo = F, warning=F, error=F, message=F}
 require(knitr)
@@ -37,7 +61,22 @@ dat <- data.frame(cond = rep(c("A", "B"), each=10),
 #    B 17.793359218 19.718587761
 #    B 19.319909163 19.647899863
 
-g4 <- ggplot(dat, aes(x=xvar, y=yvar, colour = cond)) +
-  geom_point(shape=1) +    # Use hollow circles
+g4 <- ggplot(dat, aes(x=xvar, y=yvar)) +
+  geom_point(shape=19, aes(color = cond), size=5) +    # Use hollow circles
   geom_smooth()
+
+g4
+```
+
+There are lots of ways that we might add a tooltip if that is all we want.  However, I think we will want more than just tooltips, so a full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly SVG copy of our ggplot2 graphic above.
+
+```{r fig.keep='none'}
+require(gridSVG)
+#print our ggplot2 graphic again
+g4
+#export to SVG file and R object
+#grid.export deprecates the older gridToSVG
+g4.svg <- grid.export("plot1.svg")
+#print our newly exported SVG inline
+cat(saveXML(g4.svg$svg))
 ```
