@@ -111,7 +111,7 @@ g4 <- ggplot(dat, aes(x=xvar, y=yvar)) +
 g4
 ```
 
-There are lots of ways that we might add a tooltip.  However, I think we will want more than just tooltips.  A full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly different SVG copy of our ggplot2 graphic above.  If you don't believe it is SVG, left-click on the graphic and Inspect Element.  I told you it was SVG.  If you still don't believe me, zoom in to 400% and see if you can tell a difference between SVG and png.
+There are lots of ways that we might add a tooltip.  `gridSVG` on its own can easily handle this and even animation.  However, I really want to use d3.  A full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly different SVG copy of our ggplot2 graphic above.  If you don't believe it is SVG, left-click on the graphic and Inspect Element.  I told you it was SVG.  If you still don't believe me, zoom in to 400% and see if you can tell a difference between SVG and png.
 
 ```{r fig.keep='none'}
 require(gridSVG)
