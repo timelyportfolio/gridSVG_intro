@@ -134,7 +134,7 @@ cat('<script>\n',
         .attr("y",-d3.select(this).attr("y"))      
         .attr("dy","0.35em")
         .attr("transform","scale(1,-1)")
-        .text("x:" + d.value.xvar + " | y:" + d.value.yvar);
+        .text("x:" + Math.round(d.value.xvar*100)/100 + " | y:" + Math.round(d.value.yvar*100)/100);
     })              
     .on("mouseout", function(d) {       
         d3.select("#tooltip").remove();  
@@ -143,4 +143,4 @@ cat('<script>\n',
 )
 ```
 
-Not perfect, but I think our progress is admirable. We can save the fancier tooltips and more interactivity for later.
+Not perfect, but I think our progress is admirable. We can save the fancier tooltips and additional interactivity for later.  Please don't consider any of what is shown here as best practice.  Much of this is experimental.  We will explore many other ways of accomplishing and extending what we have done.  If you have suggestions and ideas, please share them.

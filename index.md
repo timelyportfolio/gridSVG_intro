@@ -88,7 +88,7 @@ cat(saveXML(g4.svg$svg))
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="720px" height="288px" viewBox="0 0 720 288" version="1.1">
   <metadata xmlns:gridsvg="http://www.stat.auckland.ac.nz/~paul/R/gridSVG/">
-    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-05 23:00:10"/>
+    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-05 23:15:50"/>
     <gridsvg:argument name="name" value="plot1.svg"/>
     <gridsvg:argument name="exportCoords" value="none"/>
     <gridsvg:argument name="exportMappings" value="none"/>
@@ -433,8 +433,8 @@ List of 9
   ..$ xvar: num [1:20] -4.25 1.7 4.32 1.78 11.54 ...
   ..$ yvar: num [1:20] 3.47316 0.00594 -0.09425 2.07281 1.21544 ...
  $ layers     :List of 2
-  ..$ :Classes 'proto', 'environment' <environment: 0x0000000008e396b0> 
-  ..$ :Classes 'proto', 'environment' <environment: 0x0000000008f09b30> 
+  ..$ :Classes 'proto', 'environment' <environment: 0x0000000008a2c050> 
+  ..$ :Classes 'proto', 'environment' <environment: 0x0000000008afc4d0> 
  $ scales     :Reference class 'Scales' [package "ggplot2"] with 1 fields
   ..$ scales: list()
   ..and 21 methods, of which 9 are possibly relevant:
@@ -512,6 +512,8 @@ cat(
  scatterPoints.data(dataToBind) </script>
 
 
+Once our data is bound, we are well on our way to some tooltips.  Let's add some simple tooltips that tell us the x and y data from R (note not the x,y SVG coordinates).
+
 
 ```r
 cat('<script>\n',
@@ -524,7 +526,7 @@ cat('<script>\n',
         .attr("y",-d3.select(this).attr("y"))      
         .attr("dy","0.35em")
         .attr("transform","scale(1,-1)")
-        .text("x:" + d.value.xvar + " | y:" + d.value.yvar);
+        .text("x:" + Math.round(d.value.xvar*100)/100 + " | y:" + Math.round(d.value.yvar*100)/100);
     })              
     .on("mouseout", function(d) {       
         d3.select("#tooltip").remove();  
@@ -543,11 +545,11 @@ cat('<script>\n',
         .attr("y",-d3.select(this).attr("y"))      
         .attr("dy","0.35em")
         .attr("transform","scale(1,-1)")
-        .text("x:" + d.value.xvar + " | y:" + d.value.yvar);
+        .text("x:" + Math.round(d.value.xvar*100)/100 + " | y:" + Math.round(d.value.yvar*100)/100);
     })              
     .on("mouseout", function(d) {       
         d3.select("#tooltip").remove();  
     }); </script>
 
 
-Not perfect, but I think our progress is admirable. We can save the fancier tooltips and more interactivity for later.
+Not perfect, but I think our progress is admirable. We can save the fancier tooltips and additional interactivity for later.  Please don't consider any of what is shown here as best practice.  Much of this is experimental.  We will explore many other ways of accomplishing and extending what we have done.  If you have suggestions and ideas, please share them.
