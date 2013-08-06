@@ -213,7 +213,7 @@ cat('<script>\n',
 
 Not perfect, but I think our progress is admirable. We can save the fancier tooltips and additional interactivity for later.  Please don't consider any of what is shown here as best practice.  Much of this is experimental.  We will explore many other ways of accomplishing and extending what we have done.  If you have suggestions and ideas, please share them.
 
-I strongly encourage you to visit this [blog](http://stattech.wordpress.fos.auckland.ac.nz/) to see a much more thorough discussion and additional examples.  Some other quick (and I emphasize quick) experiments that I have done are listed below.
+I strongly encourage you to visit this [blog](http://stattech.wordpress.fos.auckland.ac.nz/) and Paul Murrell's [summary page](https://www.stat.auckland.ac.nz/~paul/R/gridSVG/) to see a much more thorough discussion and additional examples.  Some other quick (and I emphasize quick) experiments that I have done are listed below.
 
 - http://timelyportfolio.github.io/gridSVG_tests/d3test_fromR.html (click on the legend and points)
 - http://timelyportfolio.github.io/gridSVG_tests/d3testline.html
