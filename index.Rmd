@@ -64,8 +64,8 @@ dat <- data.frame(cond = rep(c("A", "B"), each=10),
 #    B 19.319909163 19.647899863
 
 g4 <- ggplot(dat, aes(x=xvar, y=yvar)) +
-  geom_point(shape=19, aes(color = cond), size=5) +    # Use hollow circles
-  geom_smooth()
+  geom_smooth() +  #we'll see why order is important
+  geom_point(shape=19, aes(color = cond), size=5) 
 
 g4
 ```
@@ -121,21 +121,26 @@ cat(
 )
 ```
 
-<script>
-scatterPoints  
+Once our data is bound, we are well on our way to some tooltips.  Let's add some simple tooltips that tell us the x and y data from R (note not the x,y SVG coordinates).
+
+```{r}
+cat('<script>\n',
+'scatterPoints  
     .on("mouseover", function(d) {      
       //Create the tooltip label
-      d3.select(this.parentNode).append("rect")
+      d3.select(this.parentNode).append("text")
         .attr("id","tooltip")
         .attr("x",d3.select(this).attr("x"))
-        .attr("y",d3.select(this).attr("y"))
-        .attr("width",10)
-        .attr("height",10)
-        .attr("fill","blue");
-        //.attr("text-anchor", "middle")
-        //.text(d);
+        .attr("y",-d3.select(this).attr("y"))      
+        .attr("dy","0.35em")
+        .attr("transform","scale(1,-1)")
+        .text("x:" + d.value.xvar + " | y:" + d.value.yvar);
     })              
     .on("mouseout", function(d) {       
         d3.select("#tooltip").remove();  
-    });
-</script>
+    });',
+'</script>'
+)
+```
+
+Not perfect, but I think our progress is admirable. We can save the fancier tooltips and more interactivity for later.
