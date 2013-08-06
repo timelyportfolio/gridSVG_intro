@@ -1,184 +1,76 @@
 <!DOCTYPE html>
-<!-- saved from url=(0014)about:internet -->
-<html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>R Interactive Graphics with gridSVG and d3</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="icon" type="image/png" href="favicon.ico">
+  <style>
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+  </style>
+  
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap.no-responsive.no-icons.min.css" rel="stylesheet">
+<!-- <link rel="stylesheet" href="/css/bootstrap.min.css"> -->
+<link  rel="stylesheet" 
+    href="http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css">
+  <link rel="stylesheet" href="libraries/frameworks/bootstrap/css/bootstrap-responsive.min.css">
+  
+  <link rel="stylesheet" href="libraries/frameworks/bootstrap/css/main.css">
+  <link rel="stylesheet" href="libraries/highlighters/prettify/css/twitter-bootstrap.css" />
+  <script src="libraries/frameworks/bootstrap/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/frameworks/bootstrap/js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+    <link rel=stylesheet href="http://fonts.googleapis.com/css?family=Raleway:300"></link>
+<link rel=stylesheet href="http://fonts.googleapis.com/css?family=Oxygen"></link>
 
-<title>R Interactive Graphics with SVG</title>
-
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 12px;
-   margin: 8px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 { 
-   font-size:2.2em; 
-}
-
-h2 { 
-   font-size:1.8em; 
-}
-
-h3 { 
-   font-size:1.4em; 
-}
-
-h4 { 
-   font-size:1.0em; 
-}
-
-h5 { 
-   font-size:0.9em; 
-}
-
-h6 { 
-   font-size:0.8em; 
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre {	
-   margin-top: 0;
-   max-width: 95%;
-   border: 1px solid #ccc;
-   white-space: pre-wrap;
-}
-
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code.r, code.cpp {
-   background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * { 
-      background: transparent !important; 
-      color: black !important; 
-      filter:none !important; 
-      -ms-filter: none !important; 
-   }
-
-   body { 
-      font-size:12pt; 
-      max-width:100%; 
-   }
-       
-   a, a:visited { 
-      text-decoration: underline; 
-   }
-
-   hr { 
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote { 
-      padding-right: 1em; 
-      page-break-inside: avoid; 
-   }
-
-   tr, img { 
-      page-break-inside: avoid; 
-   }
-
-   img { 
-      max-width: 100% !important; 
-   }
-
-   @page :left { 
-      margin: 15mm 20mm 15mm 10mm; 
-   }
-     
-   @page :right { 
-      margin: 15mm 10mm 15mm 20mm; 
-   }
-
-   p, h2, h3 { 
-      orphans: 3; widows: 3; 
-   }
-
-   h2, h3 { 
-      page-break-after: avoid; 
-   }
-}
-
-</style>
-
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: rgb(88, 72, 246)
-   }
-
-   pre .number {
-     color: rgb(0, 0, 205);
-   }
-
-   pre .comment {
-     color: rgb(76, 136, 107);
-   }
-
-   pre .keyword {
-     color: rgb(0, 0, 255);
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: rgb(3, 106, 7);
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
-
-
-
+  <script src="http://d3js.org/d3.v3.js"></script>
 
 </head>
-
 <body>
-<script src = 'http://d3js.org/d3.v3.js' meta-charset='utf-8'></script>
+   <!--[if lt IE 7]>
+     <p class="chromeframe">You are using an outdated browser. 
+       <a href="http://browsehappy.com/">Upgrade your browser today</a> or 
+       <a href="http://www.google.com/chromeframe/?redirect=true"> 
+         install Google Chrome Frame
+       </a> to better experience this site.
+    </p>
+   <![endif]-->
+   <!-- Ref: http://twitter.github.com/bootstrap/examples/hero.html -->
+   
+    <div class="container">
+      
+<style>
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1000px; }
+
+h3 {
+  background-color: #D4DAEC;
+  text-indent: 100px; 
+}
+
+h4 {
+  text-indent: 100px;
+}
+</style>
+
+<p><a href="https://github.com/timelyportfolio/gridSVG_intro"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a></p>
 
 <h1>R Interactive Graphics with SVG</h1>
 
@@ -197,7 +89,7 @@ hljs.initHighlightingOnLoad();
 
 <iframe height = "400"  width = "900" src = "http://www.omegahat.org/SVGAnnotation/SVGAnnotationPaper/XMLExamples/quakes_tips.svg"></iframe>
 
-<p>Now let&#39;s fast forward 3 years to 2013 where the concept of the HTML5/SVG/javascript combination for interactive graphics is <a href="https://github.com/popular/starred">ultra popular</a> and <a href="http://biovisualize.github.io/d3visualization/">well established</a> through <a href="http://d3js.org">d3.js</a>.  The novel element of d3 is its ability to bind data to elements of a document to create the 3 d&#39;s of d3&ndash;data-driven documents.</p>
+<p>Now let&#39;s fast forward 3 years to 2013 where the concept of the HTML5/SVG/javascript combination for interactive graphics is <a href="https://github.com/popular/starred">ultra popular</a> and <a href="http://biovisualize.github.io/d3visualization/">well established</a> through <a href="http://d3js.org">d3.js</a>.  The novel element of d3 is its ability to bind data to elements of a document to create the 3 d&#39;s of d3--data-driven documents.</p>
 
 <h2>Just a Little Bit of Glue</h2>
 
@@ -213,13 +105,15 @@ hljs.initHighlightingOnLoad();
 
 <h2>Method 2 | R Draw and Render SVG with a d3 Reverse Data Bind</h2>
 
-<p>Much of the R to SVG is already shown <a href="http://stattech.wordpress.fos.auckland.ac.nz/">in this blog</a> from the R Mecca in New Zealand.  As Simon Potter has extended SVGAnnotation while improving gridSVG, he has documented the process and the improvements on the same blog and in his soon-to-be-marked Masters&#39; thesis.  Since there are still few examples of the data bind step that we know and love from d3 but in reverse, I thought I would share a quick experiment doing a reverse data bind using d3 on a R/gridSVG exported graph.  For those not familiar with d3, Mike Bostock&#39;s <a href="http://mbostock.github.io/d3/tutorial/circle.html">Three Little Circles</a> will be very helpful.</p>
+<p>Much of the R to SVG conversion is already shown <a href="http://stattech.wordpress.fos.auckland.ac.nz/">in this blog</a> from the R Mecca in New Zealand.  As Simon Potter has extended SVGAnnotation while improving gridSVG, he has documented the process and the improvements on this blog and in his soon-to-be-marked Masters&#39; thesis.  Since there are still few examples of the data bind step that we know and love from d3 but in reverse, I thought I would share a quick experiment doing a reverse data bind using d3 on a R/gridSVG exported graph.  For those not familiar with d3, Mike Bostock&#39;s <a href="http://mbostock.github.io/d3/tutorial/circle.html">Three Little Circles</a> will be very helpful.</p>
 
 <p>If we choose gridSVG, we lose <code>base</code> graphics (SVGAnnotation does allow <code>base</code>), but I believe its advantages overcome this loss, and we still have the super-powerful <code>grid</code> graphics libraries <code>lattice</code> and <code>ggplot2</code>.  For this example, I will build on top of a ggplot2 scatter plot example from Winston Chang&#39;s <a href="http://www.cookbook-r.com/Graphs/Scatterplots_(ggplot2">Cookbook from R</a>).  This is the supporting website for his book</p>
 
 <p><iframe src="http://rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS1=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=timelyp-20&o=1&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1449316956" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>.</p>
 
-<p>Here is the slightly modified code that will produce our starting chart.  I will keep the smoothing even though we will not use it to show how we can preserve some R features not implemented as well in javascript.  Now would be a good time to get the newest gridSVG with <code>install.packages(&quot;gridSVG&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)</code>.</p>
+<p>Here is the slightly modified code that will produce our starting chart.  Notice the smoothing that would be difficult to achieve with just javascript.</p>
+
+<p>Now would be a good time to get the newest gridSVG with <code>install.packages(&quot;gridSVG&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)</code>.</p>
 
 <pre><code class="r">#get the latest version of gridSVG
 #install.packages(&quot;gridSVG&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)
@@ -245,9 +139,9 @@ g4 &lt;- ggplot(dat, aes(x=xvar, y=yvar)) +
 g4
 </code></pre>
 
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-2"/> </p>
+<p><img src="assets/fig/unnamed-chunk-2.png" alt="plot of chunk unnamed-chunk-2"> </p>
 
-<p>There are lots of ways that we might add a tooltip if that is all we want.  However, I think we will want more than just tooltips, so a full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly SVG copy of our ggplot2 graphic above.  If you don&#39;t believe it is SVG, left-click on the graphic and Inspect Element.  I told you it was SVG.  If you still don&#39;t believe me, zoom in to 400% and see if you can tell a difference between SVG and png.</p>
+<p>There are lots of ways that we might add a tooltip.  However, I think we will want more than just tooltips.  A full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly different SVG copy of our ggplot2 graphic above.  If you don&#39;t believe it is SVG, left-click on the graphic and Inspect Element.  I told you it was SVG.  If you still don&#39;t believe me, zoom in to 400% and see if you can tell a difference between SVG and png.</p>
 
 <pre><code class="r">require(gridSVG)
 #print our ggplot2 graphic again
@@ -261,7 +155,7 @@ cat(saveXML(g4.svg$svg))
 
 <p><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="720px" height="288px" viewBox="0 0 720 288" version="1.1">
   <metadata xmlns:gridsvg="http://www.stat.auckland.ac.nz/~paul/R/gridSVG/">
-    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-05 23:15:50"/>
+    <gridsvg:generator name="gridSVG" version="1.3-0" time="2013-08-06 09:39:06"/>
     <gridsvg:argument name="name" value="plot1.svg"/>
     <gridsvg:argument name="exportCoords" value="none"/>
     <gridsvg:argument name="exportMappings" value="none"/>
@@ -285,7 +179,7 @@ cat(saveXML(g4.svg$svg))
         </symbol>
       </defs>
       <g id="layout.1" class="pushedvp viewport">
-        <g id="GRID.gTableParent.120.1" class="gTableParent gTree grob gDesc">
+        <g id="GRID.gTableParent.900.1" class="gTableParent gTree grob gDesc">
           <defs>
             <clipPath id="layout::background.1-6-6-1.1.clipPath">
               <rect x="0" y="0" width="720" height="288" fill="none" stroke="none"/>
@@ -304,76 +198,76 @@ cat(saveXML(g4.svg$svg))
           </defs>
           <g id="layout::panel.3-4-3-4.1" clip-path="url(#layout::panel.3-4-3-4.1.clipPath)" class="pushedvp viewport">
             <g id="panel.3-4-3-4.1" class="gTableChild gTree grob gDesc">
-              <g id="grill.gTree.84.1" class="gTree grob gDesc">
-                <g id="panel.background.rect.75.1" class="rect grob gDesc">
-                  <rect id="panel.background.rect.75.1.1" x="41.22" y="37.28" width="609.69" height="236.32" stroke-width="1.06" stroke="none" fill="rgb(229,229,229)" stroke-dasharray="none" stroke-opacity="0" fill-opacity="1"/>
+              <g id="grill.gTree.864.1" class="gTree grob gDesc">
+                <g id="panel.background.rect.855.1" class="rect grob gDesc">
+                  <rect id="panel.background.rect.855.1.1" x="41.22" y="37.28" width="609.69" height="236.32" stroke-width="1.06" stroke="none" fill="rgb(229,229,229)" stroke-dasharray="none" stroke-opacity="0" fill-opacity="1"/>
                 </g>
-                <g id="panel.grid.minor.y.polyline.77.1" class="polyline grob gDesc">
-                  <polyline id="panel.grid.minor.y.polyline.77.1.1" points="41.22,62.03 650.92,62.03" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.minor.y.polyline.77.1.2" points="41.22,118.9 650.92,118.9" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.minor.y.polyline.77.1.3" points="41.22,175.76 650.92,175.76" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.minor.y.polyline.77.1.4" points="41.22,232.63 650.92,232.63" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                <g id="panel.grid.minor.y.polyline.857.1" class="polyline grob gDesc">
+                  <polyline id="panel.grid.minor.y.polyline.857.1.1" points="41.22,62.03 650.92,62.03" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.minor.y.polyline.857.1.2" points="41.22,118.9 650.92,118.9" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.minor.y.polyline.857.1.3" points="41.22,175.76 650.92,175.76" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.minor.y.polyline.857.1.4" points="41.22,232.63 650.92,232.63" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
-                <g id="panel.grid.minor.x.polyline.79.1" class="polyline grob gDesc">
-                  <polyline id="panel.grid.minor.x.polyline.79.1.1" points="110.14,37.28 110.14,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.minor.x.polyline.79.1.2" points="227.71,37.28 227.71,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.minor.x.polyline.79.1.3" points="345.28,37.28 345.28,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.minor.x.polyline.79.1.4" points="462.84,37.28 462.84,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.minor.x.polyline.79.1.5" points="580.41,37.28 580.41,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                <g id="panel.grid.minor.x.polyline.859.1" class="polyline grob gDesc">
+                  <polyline id="panel.grid.minor.x.polyline.859.1.1" points="110.14,37.28 110.14,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.minor.x.polyline.859.1.2" points="227.71,37.28 227.71,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.minor.x.polyline.859.1.3" points="345.28,37.28 345.28,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.minor.x.polyline.859.1.4" points="462.84,37.28 462.84,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.minor.x.polyline.859.1.5" points="580.41,37.28 580.41,273.6" stroke-width="0.53" stroke="rgb(242,242,242)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
-                <g id="panel.grid.major.y.polyline.81.1" class="polyline grob gDesc">
-                  <polyline id="panel.grid.major.y.polyline.81.1.1" points="41.22,90.46 650.92,90.46" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.y.polyline.81.1.2" points="41.22,147.33 650.92,147.33" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.y.polyline.81.1.3" points="41.22,204.2 650.92,204.2" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.y.polyline.81.1.4" points="41.22,261.07 650.92,261.07" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                <g id="panel.grid.major.y.polyline.861.1" class="polyline grob gDesc">
+                  <polyline id="panel.grid.major.y.polyline.861.1.1" points="41.22,90.46 650.92,90.46" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.y.polyline.861.1.2" points="41.22,147.33 650.92,147.33" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.y.polyline.861.1.3" points="41.22,204.2 650.92,204.2" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.y.polyline.861.1.4" points="41.22,261.07 650.92,261.07" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
-                <g id="panel.grid.major.x.polyline.83.1" class="polyline grob gDesc">
-                  <polyline id="panel.grid.major.x.polyline.83.1.1" points="51.36,37.28 51.36,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.x.polyline.83.1.2" points="168.92,37.28 168.92,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.x.polyline.83.1.3" points="286.49,37.28 286.49,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.x.polyline.83.1.4" points="404.06,37.28 404.06,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.x.polyline.83.1.5" points="521.63,37.28 521.63,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                  <polyline id="panel.grid.major.x.polyline.83.1.6" points="639.19,37.28 639.19,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
-                </g>
-              </g>
-              <g id="smooths.gTree.69.1" class="gTree grob gDesc">
-                <g id="geom_ribbon.polygon.66.1" class="polygon grob gDesc">
-                  <polygon id="geom_ribbon.polygon.66.1.1" points="68.94,177.15 75.95,172.15 82.97,167.52 89.98,163.26 97,159.37 104.02,155.86 111.03,152.73 118.05,149.98 125.06,147.61 132.08,145.62 139.1,143.99 146.11,142.72 153.13,141.78 160.14,141.15 167.16,140.79 174.18,140.69 181.19,140.8 188.21,141.09 195.22,141.53 202.24,142.09 209.26,142.75 216.27,143.47 223.29,144.26 230.3,145.21 237.32,146.38 244.34,147.82 251.35,149.52 258.37,151.41 265.39,153.38 272.4,155.26 279.42,156.88 286.43,158.22 293.45,159.33 300.47,160.26 307.48,161.09 314.5,161.88 321.51,162.7 328.53,163.6 335.55,164.62 342.56,165.76 349.58,166.99 356.59,168.24 363.61,169.45 370.63,170.52 377.64,171.35 384.66,171.47 391.67,171.32 398.69,171.55 405.71,172.21 412.72,172.59 419.74,172.95 426.75,173.71 433.77,174.97 440.79,176.54 447.8,178.25 454.82,180.3 461.83,182.92 468.85,186.07 475.87,189.47 482.88,192.65 489.9,195.18 496.91,197.44 503.93,199.63 510.95,201.76 517.96,203.84 524.98,205.89 531.99,207.93 539.01,209.98 546.03,212.05 553.04,214.19 560.06,216.45 567.08,218.93 574.09,221.75 581.11,225.15 588.12,229.32 595.14,234.35 602.16,240.26 609.17,247.02 616.19,254.57 623.2,262.86 623.2,154.69 616.19,158.39 609.17,161.38 602.16,163.57 595.14,164.91 588.12,165.37 581.11,164.96 574.09,163.75 567.08,161.85 560.06,159.44 553.04,156.68 546.03,153.71 539.01,150.62 531.99,147.49 524.98,144.39 517.96,141.38 510.95,138.52 503.93,135.86 496.91,133.45 489.9,131.37 482.88,129.76 475.87,128.81 468.85,128.13 461.83,127.36 454.82,126.29 447.8,125 440.79,123.77 433.77,123 426.75,122.5 419.74,121.84 412.72,120.86 405.71,119.68 398.69,118.8 391.67,118.45 384.66,117.89 377.64,116.79 370.63,115.4 363.61,114.06 356.59,112.69 349.58,111.22 342.56,109.6 335.55,107.79 328.53,105.8 321.51,103.64 314.5,101.37 307.48,99.07 300.47,96.82 293.45,94.72 286.43,92.87 279.42,91.34 272.4,90.2 265.39,89.4 258.37,88.64 251.35,87.8 244.34,86.83 237.32,85.72 230.3,84.52 223.29,83.33 216.27,82.28 209.26,81.49 202.24,80.91 195.22,80.36 188.21,79.8 181.19,79.21 174.18,78.57 167.16,77.85 160.14,77.01 153.13,76.02 146.11,74.86 139.1,73.51 132.08,71.96 125.06,70.18 118.05,68.17 111.03,65.94 104.02,63.49 97,60.81 89.98,57.92 82.97,54.82 75.95,51.52 68.94,48.02" fill="rgb(153,153,153)" stroke="none" stroke-width="1.06" stroke-dasharray="none" stroke-opacity="0" fill-opacity="0.4"/>
-                </g>
-                <g id="GRID.polyline.67.1" class="polyline grob gDesc">
-                  <polyline id="GRID.polyline.67.1.1" points="68.94,112.59 75.95,111.84 82.97,111.17 89.98,110.59 97,110.09 104.02,109.68 111.03,109.34 118.05,109.08 125.06,108.9 132.08,108.79 139.1,108.75 146.11,108.79 153.13,108.9 160.14,109.08 167.16,109.32 174.18,109.63 181.19,110.01 188.21,110.44 195.22,110.94 202.24,111.5 209.26,112.12 216.27,112.87 223.29,113.8 230.3,114.87 237.32,116.05 244.34,117.33 251.35,118.66 258.37,120.02 265.39,121.39 272.4,122.73 279.42,124.11 286.43,125.55 293.45,127.03 300.47,128.54 307.48,130.08 314.5,131.62 321.51,133.17 328.53,134.7 335.55,136.21 342.56,137.68 349.58,139.1 356.59,140.46 363.61,141.75 370.63,142.96 377.64,144.07 384.66,144.68 391.67,144.89 398.69,145.17 405.71,145.94 412.72,146.72 419.74,147.4 426.75,148.11 433.77,148.98 440.79,150.15 447.8,151.62 454.82,153.3 461.83,155.14 468.85,157.1 475.87,159.14 482.88,161.21 489.9,163.28 496.91,165.45 503.93,167.74 510.95,170.14 517.96,172.61 524.98,175.14 531.99,177.71 539.01,180.3 546.03,182.88 553.04,185.44 560.06,187.95 567.08,190.39 574.09,192.75 581.11,195.05 588.12,197.35 595.14,199.63 602.16,201.91 609.17,204.2 616.19,206.48 623.2,208.77" stroke="rgb(51,102,255)" fill="none" stroke-width="1.06" stroke-dasharray="none" stroke-linecap="butt" stroke-linejoin="round" stroke-miterlimit="1" stroke-opacity="1" fill-opacity="1"/>
+                <g id="panel.grid.major.x.polyline.863.1" class="polyline grob gDesc">
+                  <polyline id="panel.grid.major.x.polyline.863.1.1" points="51.36,37.28 51.36,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.x.polyline.863.1.2" points="168.92,37.28 168.92,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.x.polyline.863.1.3" points="286.49,37.28 286.49,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.x.polyline.863.1.4" points="404.06,37.28 404.06,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.x.polyline.863.1.5" points="521.63,37.28 521.63,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
+                  <polyline id="panel.grid.major.x.polyline.863.1.6" points="639.19,37.28 639.19,273.6" stroke-width="1.06" stroke="rgb(255,255,255)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                 </g>
               </g>
-              <g id="geom_point.points.71.1" class="points grob gDesc">
-                <use id="geom_point.points.71.1.1" xlink:href="#gridSVG.pch19" x="68.94" y="110.21" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.2" xlink:href="#gridSVG.pch19" x="208.95" y="90.5" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.3" xlink:href="#gridSVG.pch19" x="270.57" y="89.93" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.4" xlink:href="#gridSVG.pch19" x="210.79" y="102.25" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.5" xlink:href="#gridSVG.pch19" x="440.21" y="97.37" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.6" xlink:href="#gridSVG.pch19" x="325.81" y="110.98" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.7" xlink:href="#gridSVG.pch19" x="169.02" y="133.28" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.8" xlink:href="#gridSVG.pch19" x="403.39" y="125.47" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.9" xlink:href="#gridSVG.pch19" x="380.72" y="141.28" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.10" xlink:href="#gridSVG.pch19" x="445.61" y="141.23" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.11" xlink:href="#gridSVG.pch19" x="376.79" y="165.54" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.12" xlink:href="#gridSVG.pch19" x="309.4" y="190.81" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.13" xlink:href="#gridSVG.pch19" x="522.45" y="150.09" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.14" xlink:href="#gridSVG.pch19" x="427.22" y="148.12" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.15" xlink:href="#gridSVG.pch19" x="487.37" y="196.7" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.16" xlink:href="#gridSVG.pch19" x="437.82" y="199.33" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.17" xlink:href="#gridSVG.pch19" x="568.11" y="197.56" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.18" xlink:href="#gridSVG.pch19" x="573.83" y="198.17" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.19" xlink:href="#gridSVG.pch19" x="587.31" y="202.6" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
-                <use id="geom_point.points.71.1.20" xlink:href="#gridSVG.pch19" x="623.2" y="202.2" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+              <g id="smooths.gTree.849.1" class="gTree grob gDesc">
+                <g id="geom_ribbon.polygon.846.1" class="polygon grob gDesc">
+                  <polygon id="geom_ribbon.polygon.846.1.1" points="68.94,177.15 75.95,172.15 82.97,167.52 89.98,163.26 97,159.37 104.02,155.86 111.03,152.73 118.05,149.98 125.06,147.61 132.08,145.62 139.1,143.99 146.11,142.72 153.13,141.78 160.14,141.15 167.16,140.79 174.18,140.69 181.19,140.8 188.21,141.09 195.22,141.53 202.24,142.09 209.26,142.75 216.27,143.47 223.29,144.26 230.3,145.21 237.32,146.38 244.34,147.82 251.35,149.52 258.37,151.41 265.39,153.38 272.4,155.26 279.42,156.88 286.43,158.22 293.45,159.33 300.47,160.26 307.48,161.09 314.5,161.88 321.51,162.7 328.53,163.6 335.55,164.62 342.56,165.76 349.58,166.99 356.59,168.24 363.61,169.45 370.63,170.52 377.64,171.35 384.66,171.47 391.67,171.32 398.69,171.55 405.71,172.21 412.72,172.59 419.74,172.95 426.75,173.71 433.77,174.97 440.79,176.54 447.8,178.25 454.82,180.3 461.83,182.92 468.85,186.07 475.87,189.47 482.88,192.65 489.9,195.18 496.91,197.44 503.93,199.63 510.95,201.76 517.96,203.84 524.98,205.89 531.99,207.93 539.01,209.98 546.03,212.05 553.04,214.19 560.06,216.45 567.08,218.93 574.09,221.75 581.11,225.15 588.12,229.32 595.14,234.35 602.16,240.26 609.17,247.02 616.19,254.57 623.2,262.86 623.2,154.69 616.19,158.39 609.17,161.38 602.16,163.57 595.14,164.91 588.12,165.37 581.11,164.96 574.09,163.75 567.08,161.85 560.06,159.44 553.04,156.68 546.03,153.71 539.01,150.62 531.99,147.49 524.98,144.39 517.96,141.38 510.95,138.52 503.93,135.86 496.91,133.45 489.9,131.37 482.88,129.76 475.87,128.81 468.85,128.13 461.83,127.36 454.82,126.29 447.8,125 440.79,123.77 433.77,123 426.75,122.5 419.74,121.84 412.72,120.86 405.71,119.68 398.69,118.8 391.67,118.45 384.66,117.89 377.64,116.79 370.63,115.4 363.61,114.06 356.59,112.69 349.58,111.22 342.56,109.6 335.55,107.79 328.53,105.8 321.51,103.64 314.5,101.37 307.48,99.07 300.47,96.82 293.45,94.72 286.43,92.87 279.42,91.34 272.4,90.2 265.39,89.4 258.37,88.64 251.35,87.8 244.34,86.83 237.32,85.72 230.3,84.52 223.29,83.33 216.27,82.28 209.26,81.49 202.24,80.91 195.22,80.36 188.21,79.8 181.19,79.21 174.18,78.57 167.16,77.85 160.14,77.01 153.13,76.02 146.11,74.86 139.1,73.51 132.08,71.96 125.06,70.18 118.05,68.17 111.03,65.94 104.02,63.49 97,60.81 89.98,57.92 82.97,54.82 75.95,51.52 68.94,48.02" fill="rgb(153,153,153)" stroke="none" stroke-width="1.06" stroke-dasharray="none" stroke-opacity="0" fill-opacity="0.4"/>
+                </g>
+                <g id="GRID.polyline.847.1" class="polyline grob gDesc">
+                  <polyline id="GRID.polyline.847.1.1" points="68.94,112.59 75.95,111.84 82.97,111.17 89.98,110.59 97,110.09 104.02,109.68 111.03,109.34 118.05,109.08 125.06,108.9 132.08,108.79 139.1,108.75 146.11,108.79 153.13,108.9 160.14,109.08 167.16,109.32 174.18,109.63 181.19,110.01 188.21,110.44 195.22,110.94 202.24,111.5 209.26,112.12 216.27,112.87 223.29,113.8 230.3,114.87 237.32,116.05 244.34,117.33 251.35,118.66 258.37,120.02 265.39,121.39 272.4,122.73 279.42,124.11 286.43,125.55 293.45,127.03 300.47,128.54 307.48,130.08 314.5,131.62 321.51,133.17 328.53,134.7 335.55,136.21 342.56,137.68 349.58,139.1 356.59,140.46 363.61,141.75 370.63,142.96 377.64,144.07 384.66,144.68 391.67,144.89 398.69,145.17 405.71,145.94 412.72,146.72 419.74,147.4 426.75,148.11 433.77,148.98 440.79,150.15 447.8,151.62 454.82,153.3 461.83,155.14 468.85,157.1 475.87,159.14 482.88,161.21 489.9,163.28 496.91,165.45 503.93,167.74 510.95,170.14 517.96,172.61 524.98,175.14 531.99,177.71 539.01,180.3 546.03,182.88 553.04,185.44 560.06,187.95 567.08,190.39 574.09,192.75 581.11,195.05 588.12,197.35 595.14,199.63 602.16,201.91 609.17,204.2 616.19,206.48 623.2,208.77" stroke="rgb(51,102,255)" fill="none" stroke-width="1.06" stroke-dasharray="none" stroke-linecap="butt" stroke-linejoin="round" stroke-miterlimit="1" stroke-opacity="1" fill-opacity="1"/>
+                </g>
+              </g>
+              <g id="geom_point.points.851.1" class="points grob gDesc">
+                <use id="geom_point.points.851.1.1" xlink:href="#gridSVG.pch19" x="68.94" y="110.21" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.2" xlink:href="#gridSVG.pch19" x="208.95" y="90.5" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.3" xlink:href="#gridSVG.pch19" x="270.57" y="89.93" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.4" xlink:href="#gridSVG.pch19" x="210.79" y="102.25" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.5" xlink:href="#gridSVG.pch19" x="440.21" y="97.37" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.6" xlink:href="#gridSVG.pch19" x="325.81" y="110.98" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.7" xlink:href="#gridSVG.pch19" x="169.02" y="133.28" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.8" xlink:href="#gridSVG.pch19" x="403.39" y="125.47" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.9" xlink:href="#gridSVG.pch19" x="380.72" y="141.28" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.10" xlink:href="#gridSVG.pch19" x="445.61" y="141.23" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(248,118,109)" fill="rgb(248,118,109)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.11" xlink:href="#gridSVG.pch19" x="376.79" y="165.54" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.12" xlink:href="#gridSVG.pch19" x="309.4" y="190.81" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.13" xlink:href="#gridSVG.pch19" x="522.45" y="150.09" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.14" xlink:href="#gridSVG.pch19" x="427.22" y="148.12" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.15" xlink:href="#gridSVG.pch19" x="487.37" y="196.7" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.16" xlink:href="#gridSVG.pch19" x="437.82" y="199.33" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.17" xlink:href="#gridSVG.pch19" x="568.11" y="197.56" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.18" xlink:href="#gridSVG.pch19" x="573.83" y="198.17" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.19" xlink:href="#gridSVG.pch19" x="587.31" y="202.6" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
+                <use id="geom_point.points.851.1.20" xlink:href="#gridSVG.pch19" x="623.2" y="202.2" width="14.17" height="14.17" transform="translate(-7.09,-7.09)" stroke="rgb(0,191,196)" fill="rgb(0,191,196)" font-size="14.17" stroke-width="0.53" stroke-opacity="1" fill-opacity="1"/>
               </g>
             </g>
           </g>
           <g id="layout::axis-l.3-3-3-3.1" class="pushedvp viewport">
-            <g id="layout::axis-l.3-3-3-3::GRID.VP.6.1" class="pushedvp viewport">
+            <g id="layout::axis-l.3-3-3-3::GRID.VP.156.1" class="pushedvp viewport">
               <g id="axis-l.3-3-3-3.1" class="gTableChild absoluteGrob gTree grob gDesc">
-                <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis.1" class="pushedvp viewport">
-                  <g id="GRID.gTableParent.125.1" class="gTableParent gTree grob gDesc">
-                    <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis::axis.1-1-1-1.1" class="pushedvp viewport">
+                <g id="layout::axis-l.3-3-3-3::GRID.VP.156::axis.1" class="pushedvp viewport">
+                  <g id="GRID.gTableParent.905.1" class="gTableParent gTree grob gDesc">
+                    <g id="layout::axis-l.3-3-3-3::GRID.VP.156::axis::axis.1-1-1-1.1" class="pushedvp viewport">
                       <g id="axis.1-1-1-1.1" class="gTableChild text grob gDesc">
                         <g id="axis.1-1-1-1.1.1" transform="translate(34.14, 90.46)" stroke-width="0.1">
                           <g id="axis.1-1-1-1.1.1.scale" transform="scale(1, -1)">
@@ -405,7 +299,7 @@ cat(saveXML(g4.svg$svg))
                         </g>
                       </g>
                     </g>
-                    <g id="layout::axis-l.3-3-3-3::GRID.VP.6::axis::axis.1-2-1-2.1" class="pushedvp viewport">
+                    <g id="layout::axis-l.3-3-3-3::GRID.VP.156::axis::axis.1-2-1-2.1" class="pushedvp viewport">
                       <g id="axis.1-2-1-2.1" class="gTableChild polyline grob gDesc">
                         <polyline id="axis.1-2-1-2.1.1" points="36.97,90.46 41.22,90.46" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                         <polyline id="axis.1-2-1-2.1.2" points="36.97,147.33 41.22,147.33" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
@@ -419,11 +313,11 @@ cat(saveXML(g4.svg$svg))
             </g>
           </g>
           <g id="layout::axis-b.4-4-4-4.1" class="pushedvp viewport">
-            <g id="layout::axis-b.4-4-4-4::GRID.VP.5.1" class="pushedvp viewport">
+            <g id="layout::axis-b.4-4-4-4::GRID.VP.155.1" class="pushedvp viewport">
               <g id="axis-b.4-4-4-4.1" class="gTableChild absoluteGrob gTree grob gDesc">
-                <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis.1" class="pushedvp viewport">
-                  <g id="GRID.gTableParent.131.1" class="gTableParent gTree grob gDesc">
-                    <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis::axis.1-1-1-1.1" class="pushedvp viewport">
+                <g id="layout::axis-b.4-4-4-4::GRID.VP.155::axis.1" class="pushedvp viewport">
+                  <g id="GRID.gTableParent.911.1" class="gTableParent gTree grob gDesc">
+                    <g id="layout::axis-b.4-4-4-4::GRID.VP.155::axis::axis.1-1-1-1.1" class="pushedvp viewport">
                       <g id="axis.1-1-1-1.2" class="gTableChild polyline grob gDesc">
                         <polyline id="axis.1-1-1-1.2.1" points="51.36,33.03 51.36,37.28" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                         <polyline id="axis.1-1-1-1.2.2" points="168.92,33.03 168.92,37.28" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
@@ -433,7 +327,7 @@ cat(saveXML(g4.svg$svg))
                         <polyline id="axis.1-1-1-1.2.6" points="639.19,33.03 639.19,37.28" stroke-width="1.06" stroke="rgb(127,127,127)" stroke-dasharray="none" stroke-linecap="butt" stroke-opacity="1" fill="none"/>
                       </g>
                     </g>
-                    <g id="layout::axis-b.4-4-4-4::GRID.VP.5::axis::axis.2-1-2-1.1" class="pushedvp viewport">
+                    <g id="layout::axis-b.4-4-4-4::GRID.VP.155::axis::axis.2-1-2-1.1" class="pushedvp viewport">
                       <g id="axis.2-1-2-1.1" class="gTableChild text grob gDesc">
                         <g id="axis.2-1-2-1.1.1" transform="translate(51.36, 30.2)" stroke-width="0.1">
                           <g id="axis.2-1-2-1.1.1.scale" transform="scale(1, -1)">
@@ -509,11 +403,11 @@ cat(saveXML(g4.svg$svg))
           <g id="layout::guide-box.3-5-3-5.1" class="pushedvp viewport">
             <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5.1" class="pushedvp viewport">
               <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5.1" class="pushedvp viewport">
-                <g id="GRID.gTableChild.143.1" class="gTableChild gTableParent gTree grob gDesc">
+                <g id="GRID.gTableChild.923.1" class="gTableChild gTableParent gTree grob gDesc">
                   <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2.1" class="pushedvp viewport">
                     <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2.1" class="pushedvp viewport">
                       <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2.1" class="pushedvp viewport">
-                        <g id="GRID.gTableChild.144.1" class="gTableChild gTableParent gTree grob gDesc">
+                        <g id="GRID.gTableChild.924.1" class="gTableChild gTableParent gTree grob gDesc">
                           <g id="layout::guide-box.3-5-3-5::guide-box.3-5-3-5::guide-box.3-5-3-5::guides.2-2-2-2::guides.2-2-2-2::guides.2-2-2-2::background.1-6-6-1.1" class="pushedvp viewport">
                             <g id="background.1-6-6-1.2" class="gTableChild rect grob gDesc">
                               <rect id="background.1-6-6-1.2.1" x="660.95" y="128.16" width="34.61" height="54.56" stroke-width="1.06" stroke="none" fill="rgb(255,255,255)" stroke-dasharray="none" stroke-opacity="0" fill-opacity="1"/>
@@ -599,49 +493,11 @@ cat(saveXML(g4.svg$svg))
 
 <p>Of course the objective is to get more than just a more scalable graphic.  Let&#39;s bind some data to get some simple tooltips.  ggplot2 stores the data for our graph within our <code>g4</code> object.  We can see it.</p>
 
-<p>List of 9
- $ data       :&#39;data.frame&#39;:    20 obs. of  3 variables:
-  ..$ cond: Factor w/ 2 levels &ldquo;A&rdquo;,&ldquo;B&rdquo;: 1 1 1 1 1 1 1 1 1 1 &hellip;
-  ..$ xvar: num [1:20] -4.25 1.7 4.32 1.78 11.54 &hellip;
-  ..$ yvar: num [1:20] 3.47316 0.00594 -0.09425 2.07281 1.21544 &hellip;
- $ layers     :List of 2
-  ..$ :Classes &#39;proto&#39;, &#39;environment&#39; <environment: 0x0000000008a2c050> 
-  ..$ :Classes &#39;proto&#39;, &#39;environment&#39; <environment: 0x0000000008afc4d0> 
- $ scales     :Reference class &#39;Scales&#39; [package &ldquo;ggplot2&rdquo;] with 1 fields
-  ..$ scales: list()
-  ..and 21 methods, of which 9 are possibly relevant:
-  ..  add, clone, find, get_scales, has_scale, initialize, input, n,
-  ..  non_position_scales
- $ mapping    :List of 2
-  ..$ x: symbol xvar
-  ..$ y: symbol yvar
- $ theme      : list()
- $ coordinates:List of 1
-  ..$ limits:List of 2
-  .. ..$ x: NULL
-  .. ..$ y: NULL
-  ..- attr(<em>, &ldquo;class&rdquo;)= chr [1:2] &ldquo;cartesian&rdquo; &ldquo;coord&rdquo;
- $ facet      :List of 1
-  ..$ shrink: logi TRUE
-  ..- attr(</em>, &ldquo;class&rdquo;)= chr [1:2] &ldquo;null&rdquo; &ldquo;facet&rdquo;
- $ plot_env   :<environment: R_GlobalEnv> 
- $ labels     :List of 3
-  ..$ x     : chr &ldquo;xvar&rdquo;
-  ..$ y     : chr &ldquo;yvar&rdquo;
-  ..$ colour: chr &ldquo;cond&rdquo;</p>
+<pre><code class="r">str(g4)
+head(g4$data)
+</code></pre>
 
-<ul>
-<li>attr(*, &ldquo;class&rdquo;)= chr [1:2] &ldquo;gg&rdquo; &ldquo;ggplot&rdquo;
-cond   xvar     yvar
-1    A -4.252  3.47316
-2    A  1.702  0.00594
-3    A  4.323 -0.09425
-4    A  1.781  2.07281
-5    A 11.537  1.21544
-6    A  6.672  3.60811</li>
-</ul>
-
-<p>We will need to some way to give this data to Javascript.  Javascript likes JSON, so let&#39;s use the package <a href="http://cran.r-project.org/web/packages/rjson/index.html"><code>rjson</code></a> to send our data.  I will assume that we are more comfortable flattening our data in R.</p>
+<p>We will need some way to give this data to Javascript.  Javascript likes JSON, so let&#39;s use the package <a href="http://cran.r-project.org/web/packages/rjson/index.html"><code>rjson</code></a> to send our data.  I will assume that we are more comfortable flattening our data in R.  <strong>I use <code>cat</code> below but if we are using <code>knitr</code> or <code>slidify</code> we can just write the script inline.</strong></p>
 
 <pre><code class="r">cat(
   &#39;&lt;script&gt; ourdata=&#39;,
@@ -683,13 +539,40 @@ cond   xvar     yvar
 &#39;scatterPoints  
     .on(&quot;mouseover&quot;, function(d) {      
       //Create the tooltip label
-      d3.select(this.parentNode).append(&quot;text&quot;)
+      var tooltip = d3.select(this.parentNode).append(&quot;g&quot;);
+      tooltip
         .attr(&quot;id&quot;,&quot;tooltip&quot;)
-        .attr(&quot;x&quot;,d3.select(this).attr(&quot;x&quot;))
-        .attr(&quot;y&quot;,-d3.select(this).attr(&quot;y&quot;))      
-        .attr(&quot;dy&quot;,&quot;0.35em&quot;)
+        .attr(&quot;transform&quot;,&quot;translate(&quot;+(d3.select(this).attr(&quot;x&quot;)+10)+&quot;,&quot;+d3.select(this).attr(&quot;y&quot;)+&quot;)&quot;)
+        .append(&quot;rect&quot;)
+          .attr(&quot;stroke&quot;,&quot;white&quot;)
+          .attr(&quot;stroke-opacity&quot;,.5)
+          .attr(&quot;fill&quot;,&quot;white&quot;)
+          .attr(&quot;fill-opacity&quot;,.5)
+          .attr(&quot;height&quot;,30)
+          .attr(&quot;width&quot;,50)
+          .attr(&quot;rx&quot;,5)
+          .attr(&quot;x&quot;,2)
+          .attr(&quot;y&quot;,5);
+      tooltip.append(&quot;text&quot;)
         .attr(&quot;transform&quot;,&quot;scale(1,-1)&quot;)
-        .text(&quot;x:&quot; + Math.round(d.value.xvar*100)/100 + &quot; | y:&quot; + Math.round(d.value.yvar*100)/100);
+        .attr(&quot;x&quot;,5)
+        .attr(&quot;y&quot;,-22)
+        .attr(&quot;text-anchor&quot;,&quot;start&quot;)
+        .attr(&quot;stroke&quot;,&quot;gray&quot;)
+        .attr(&quot;fill&quot;,&quot;gray&quot;)
+        .attr(&quot;fill-opacity&quot;,1)
+        .attr(&quot;opacity&quot;,1)
+        .text(&quot;x:&quot; + Math.round(d.value.xvar*100)/100);
+      tooltip.append(&quot;text&quot;)
+        .attr(&quot;transform&quot;,&quot;scale(1,-1)&quot;)
+        .attr(&quot;x&quot;,5)
+        .attr(&quot;y&quot;,-10)
+        .attr(&quot;text-anchor&quot;,&quot;start&quot;)
+        .attr(&quot;stroke&quot;,&quot;gray&quot;)
+        .attr(&quot;fill&quot;,&quot;gray&quot;)      
+        .attr(&quot;fill-opacity&quot;,1)
+        .attr(&quot;opacity&quot;,1)
+        .text(&quot;y:&quot; + Math.round(d.value.yvar*100)/100);
     })              
     .on(&quot;mouseout&quot;, function(d) {       
         d3.select(&quot;#tooltip&quot;).remove();  
@@ -702,13 +585,40 @@ cond   xvar     yvar
  scatterPoints  
     .on("mouseover", function(d) {      
       //Create the tooltip label
-      d3.select(this.parentNode).append("text")
+      var tooltip = d3.select(this.parentNode).append("g");
+      tooltip
         .attr("id","tooltip")
-        .attr("x",d3.select(this).attr("x"))
-        .attr("y",-d3.select(this).attr("y"))      
-        .attr("dy","0.35em")
+        .attr("transform","translate("+(d3.select(this).attr("x")+10)+","+d3.select(this).attr("y")+")")
+        .append("rect")
+          .attr("stroke","white")
+          .attr("stroke-opacity",.5)
+          .attr("fill","white")
+          .attr("fill-opacity",.5)
+          .attr("height",30)
+          .attr("width",50)
+          .attr("rx",5)
+          .attr("x",2)
+          .attr("y",5);
+      tooltip.append("text")
         .attr("transform","scale(1,-1)")
-        .text("x:" + Math.round(d.value.xvar*100)/100 + " | y:" + Math.round(d.value.yvar*100)/100);
+        .attr("x",5)
+        .attr("y",-22)
+        .attr("text-anchor","start")
+        .attr("stroke","gray")
+        .attr("fill","gray")
+        .attr("fill-opacity",1)
+        .attr("opacity",1)
+        .text("x:" + Math.round(d.value.xvar*100)/100);
+      tooltip.append("text")
+        .attr("transform","scale(1,-1)")
+        .attr("x",5)
+        .attr("y",-10)
+        .attr("text-anchor","start")
+        .attr("stroke","gray")
+        .attr("fill","gray")      
+        .attr("fill-opacity",1)
+        .attr("opacity",1)
+        .text("y:" + Math.round(d.value.yvar*100)/100);
     })              
     .on("mouseout", function(d) {       
         d3.select("#tooltip").remove();  
@@ -716,7 +626,31 @@ cond   xvar     yvar
 
 <p>Not perfect, but I think our progress is admirable. We can save the fancier tooltips and additional interactivity for later.  Please don&#39;t consider any of what is shown here as best practice.  Much of this is experimental.  We will explore many other ways of accomplishing and extending what we have done.  If you have suggestions and ideas, please share them.</p>
 
+<p>I strongly encourage you to visit this <a href="http://stattech.wordpress.fos.auckland.ac.nz/">blog</a> to see a much more thorough discussion and additional examples.  Some other quick (and I emphasize quick) experiments that I have done are listed below.</p>
+
+<ul>
+<li><a href="http://timelyportfolio.github.io/gridSVG_tests/d3test_fromR.html">http://timelyportfolio.github.io/gridSVG_tests/d3test_fromR.html</a> (click on the legend and points)</li>
+<li><a href="http://timelyportfolio.github.io/gridSVG_tests/d3testline.html">http://timelyportfolio.github.io/gridSVG_tests/d3testline.html</a></li>
+<li><a href="http://timelyportfolio.github.io/gridSVG_tests/d3test_fromR_multline.html">http://timelyportfolio.github.io/gridSVG_tests/d3test_fromR_multline.html</a></li>
+</ul>
+
+    </div>
+        
 </body>
-
-</html>
-
+  <script src="libraries/frameworks/bootstrap/js/vendor/bootstrap.min.js"></script>
+  <script src="libraries/frameworks/bootstrap/js/plugins.js"></script>
+  <script src="libraries/frameworks/bootstrap/js/main.js"></script>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- Google Prettify -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+  <script src='libraries/highlighters/prettify/js/lang-r.js'></script>
+  <script>
+    var pres = document.getElementsByTagName("pre");
+    for (var i=0; i < pres.length; ++i) {
+      pres[i].className = "prettyprint linenums";
+    }
+    prettyPrint();
+  </script>
+  <!-- End Google Prettify --> 
+  </html>

@@ -1,4 +1,43 @@
-<script src = 'http://d3js.org/d3.v3.js' meta-charset='utf-8'></script>
+---
+title: R Interactive Graphics with gridSVG and d3
+author: Timely Portfolio
+github: {user: timelyportfolio, repo: gridSVG_intro, branch: "gh-pages"}
+framework: bootstrap
+mode: selfcontained
+highlighter: prettify
+hitheme: twitter-bootstrap
+assets:
+  css:
+    - "http://fonts.googleapis.com/css?family=Raleway:300"
+    - "http://fonts.googleapis.com/css?family=Oxygen"
+  jshead:
+    - "http://d3js.org/d3.v3.js"
+---
+
+<style>
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1000px; }
+
+h3 {
+  background-color: #D4DAEC;
+  text-indent: 100px; 
+}
+
+h4 {
+  text-indent: 100px;
+}
+</style>
+
+<a href="https://github.com/timelyportfolio/gridSVG_intro"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
 # R Interactive Graphics with SVG
 
@@ -31,14 +70,16 @@ For R, we just need a little bit of glue to blend the old with the new to direct
 I believe the choice of method will depend on the user's competence in R and/or Javascript, their desire for customization, and the need for R's data calculation abilities post-render.  I have posted a lot about using method 1 with rCharts and clickme, so I wanted to start a series of demos using method 2.  Method 3 is fairly trivial with the full-featured Shiny and Rook once we have 1 and 2 conquered.
 
 ## Method 2 | R Draw and Render SVG with a d3 Reverse Data Bind
-Much of the R to SVG is already shown [in this blog](http://stattech.wordpress.fos.auckland.ac.nz/) from the R Mecca in New Zealand.  As Simon Potter has extended SVGAnnotation while improving gridSVG, he has documented the process and the improvements on the same blog and in his soon-to-be-marked Masters' thesis.  Since there are still few examples of the data bind step that we know and love from d3 but in reverse, I thought I would share a quick experiment doing a reverse data bind using d3 on a R/gridSVG exported graph.  For those not familiar with d3, Mike Bostock's [Three Little Circles](http://mbostock.github.io/d3/tutorial/circle.html) will be very helpful.
+Much of the R to SVG conversion is already shown [in this blog](http://stattech.wordpress.fos.auckland.ac.nz/) from the R Mecca in New Zealand.  As Simon Potter has extended SVGAnnotation while improving gridSVG, he has documented the process and the improvements on this blog and in his soon-to-be-marked Masters' thesis.  Since there are still few examples of the data bind step that we know and love from d3 but in reverse, I thought I would share a quick experiment doing a reverse data bind using d3 on a R/gridSVG exported graph.  For those not familiar with d3, Mike Bostock's [Three Little Circles](http://mbostock.github.io/d3/tutorial/circle.html) will be very helpful.
 
 
 If we choose gridSVG, we lose `base` graphics (SVGAnnotation does allow `base`), but I believe its advantages overcome this loss, and we still have the super-powerful `grid` graphics libraries `lattice` and `ggplot2`.  For this example, I will build on top of a ggplot2 scatter plot example from Winston Chang's [Cookbook from R](http://www.cookbook-r.com/Graphs/Scatterplots_(ggplot2)).  This is the supporting website for his book
 
 <iframe src="http://rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS1=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=timelyp-20&o=1&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1449316956" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>.
 
-Here is the slightly modified code that will produce our starting chart.  I will keep the smoothing even though we will not use it to show how we can preserve some R features not implemented as well in javascript.  Now would be a good time to get the newest gridSVG with `install.packages("gridSVG", repos="http://R-Forge.R-project.org")`.
+Here is the slightly modified code that will produce our starting chart.  Notice the smoothing that would be difficult to achieve with just javascript.
+
+Now would be a good time to get the newest gridSVG with `install.packages("gridSVG", repos="http://R-Forge.R-project.org")`.
 
 ```{r echo = F, warning=F, error=F, message=F}
 require(knitr)
@@ -70,7 +111,7 @@ g4 <- ggplot(dat, aes(x=xvar, y=yvar)) +
 g4
 ```
 
-There are lots of ways that we might add a tooltip if that is all we want.  However, I think we will want more than just tooltips, so a full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly SVG copy of our ggplot2 graphic above.  If you don't believe it is SVG, left-click on the graphic and Inspect Element.  I told you it was SVG.  If you still don't believe me, zoom in to 400% and see if you can tell a difference between SVG and png.
+There are lots of ways that we might add a tooltip.  However, I think we will want more than just tooltips.  A full d3-style data bind will be a fine way to achieve this extra functionality.  When we export our graphic, we will get an impercetibly different SVG copy of our ggplot2 graphic above.  If you don't believe it is SVG, left-click on the graphic and Inspect Element.  I told you it was SVG.  If you still don't believe me, zoom in to 400% and see if you can tell a difference between SVG and png.
 
 ```{r fig.keep='none'}
 require(gridSVG)
@@ -85,12 +126,12 @@ cat(saveXML(g4.svg$svg))
 
 Of course the objective is to get more than just a more scalable graphic.  Let's bind some data to get some simple tooltips.  ggplot2 stores the data for our graph within our `g4` object.  We can see it.
 
-```{r echo=F}
+```{r eval=F}
 str(g4)
 head(g4$data)
 ```
 
-We will need to some way to give this data to Javascript.  Javascript likes JSON, so let's use the package [`rjson`](http://cran.r-project.org/web/packages/rjson/index.html) to send our data.  I will assume that we are more comfortable flattening our data in R.
+We will need some way to give this data to Javascript.  Javascript likes JSON, so let's use the package [`rjson`](http://cran.r-project.org/web/packages/rjson/index.html) to send our data.  I will assume that we are more comfortable flattening our data in R.  **I use `cat` below but if we are using `knitr` or `slidify` we can just write the script inline.**
 
 ```{r}
 cat(
@@ -128,13 +169,40 @@ cat('<script>\n',
 'scatterPoints  
     .on("mouseover", function(d) {      
       //Create the tooltip label
-      d3.select(this.parentNode).append("text")
+      var tooltip = d3.select(this.parentNode).append("g");
+      tooltip
         .attr("id","tooltip")
-        .attr("x",d3.select(this).attr("x"))
-        .attr("y",-d3.select(this).attr("y"))      
-        .attr("dy","0.35em")
+        .attr("transform","translate("+(d3.select(this).attr("x")+10)+","+d3.select(this).attr("y")+")")
+        .append("rect")
+          .attr("stroke","white")
+          .attr("stroke-opacity",.5)
+          .attr("fill","white")
+          .attr("fill-opacity",.5)
+          .attr("height",30)
+          .attr("width",50)
+          .attr("rx",5)
+          .attr("x",2)
+          .attr("y",5);
+      tooltip.append("text")
         .attr("transform","scale(1,-1)")
-        .text("x:" + Math.round(d.value.xvar*100)/100 + " | y:" + Math.round(d.value.yvar*100)/100);
+        .attr("x",5)
+        .attr("y",-22)
+        .attr("text-anchor","start")
+        .attr("stroke","gray")
+        .attr("fill","gray")
+        .attr("fill-opacity",1)
+        .attr("opacity",1)
+        .text("x:" + Math.round(d.value.xvar*100)/100);
+      tooltip.append("text")
+        .attr("transform","scale(1,-1)")
+        .attr("x",5)
+        .attr("y",-10)
+        .attr("text-anchor","start")
+        .attr("stroke","gray")
+        .attr("fill","gray")      
+        .attr("fill-opacity",1)
+        .attr("opacity",1)
+        .text("y:" + Math.round(d.value.yvar*100)/100);
     })              
     .on("mouseout", function(d) {       
         d3.select("#tooltip").remove();  
@@ -144,3 +212,9 @@ cat('<script>\n',
 ```
 
 Not perfect, but I think our progress is admirable. We can save the fancier tooltips and additional interactivity for later.  Please don't consider any of what is shown here as best practice.  Much of this is experimental.  We will explore many other ways of accomplishing and extending what we have done.  If you have suggestions and ideas, please share them.
+
+I strongly encourage you to visit this [blog](http://stattech.wordpress.fos.auckland.ac.nz/) to see a much more thorough discussion and additional examples.  Some other quick (and I emphasize quick) experiments that I have done are listed below.
+
+- http://timelyportfolio.github.io/gridSVG_tests/d3test_fromR.html (click on the legend and points)
+- http://timelyportfolio.github.io/gridSVG_tests/d3testline.html
+- http://timelyportfolio.github.io/gridSVG_tests/d3test_fromR_multline.html
