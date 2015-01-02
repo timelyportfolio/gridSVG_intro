@@ -115,6 +115,7 @@ There are lots of ways that we might add a tooltip.  `gridSVG` on its own can ea
 
 ```{r fig.keep='none'}
 require(gridSVG)
+require(XML)
 #print our ggplot2 graphic again
 g4
 #export to SVG file and R object
